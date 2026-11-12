@@ -14,3 +14,7 @@
 - Joka user storylle tehdään oma feature branch.
 - Käytetään PEP-8 -tyyliä.
 - Tekoälyä voi käyttää, mutta pitää ymmärtää sen tuottama koodi myös itse.
+
+## Kehitys
+
+Kehityksen alla on samanaikaisesti vain nelä taskia.
