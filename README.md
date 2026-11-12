@@ -16,3 +16,5 @@ Huomaa, että **klusterin tietokanta ei päivity automaattisesti**: tietokanta o
 [pelisaannot.md](pelisaannot.md)
 
 [Backlog](https://github.com/users/sami-alt/projects/2/views/1)
+
+[OKD-klusterilla toimiva sovellus](https://route-ohjelmistotuotanto-lahiopetus-2026-5.ext.okd-cs-test-0.k8s.cs.helsinki.fi/)
