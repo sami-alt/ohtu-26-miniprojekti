@@ -14,3 +14,5 @@ Huomaa, että **klusterin tietokanta ei päivity automaattisesti**: tietokanta o
 
 
 [pelisaannot.md](pelisaannot.md)
+
+[Backlog](https://github.com/users/sami-alt/projects/2/views/1)
