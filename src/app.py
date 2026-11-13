@@ -18,10 +18,6 @@ def new():
 def new_book():
     return render_template("new_book.html")
 
-@app.route("/new_inproceedings")
-def new_inproceedings():
-    return render_template("new_inproceedings.html")
-
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():
     content = request.form.get("content")
