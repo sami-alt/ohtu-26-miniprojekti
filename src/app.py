@@ -28,11 +28,12 @@ def add_book_to_references():
 
     try:
         add_book_reference(author, title, publisher, year)
+        return redirect("/")
     except Exception as error:
         flash(str(error))
         return redirect("/new_book")
 
-    pass
+    
 
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():

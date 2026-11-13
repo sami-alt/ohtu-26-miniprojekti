@@ -3,7 +3,7 @@ from sqlalchemy import text
 
 def add_book_reference(author, title, publisher, year):
     query = text("""
-        INSERT INTO TABLE_NAME (author, title, publisher,year)
+        INSERT INTO books (author, title, publisher,year)
         values (:author, :title, :publisher, :year)
     """)
 
