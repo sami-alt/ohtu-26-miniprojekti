@@ -12,3 +12,6 @@ report.html
 possu.sh
 secret.env
 playwright-log.txt
+.DS_Store
+.AppleDouble
+.pytest_cache/
