@@ -14,6 +14,10 @@ def index():
 def new():
     return render_template("new_todo.html")
 
+@app.route("/new_book")
+def new_book():
+    return render_template("new_book.html")
+
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():
     content = request.form.get("content")
