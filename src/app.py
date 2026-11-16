@@ -2,6 +2,7 @@ from flask import redirect, render_template, request, jsonify, flash
 from db_helper import reset_db
 from repositories.todo_repository import get_todos, create_todo, set_done
 from repositories.book_repositories import add_book_reference
+from repositories.inproceedings_repository import add_inproceedings_reference
 from config import app, test_env
 from util import validate_todo
 
@@ -18,6 +19,20 @@ def new():
 @app.route("/new_inproceedings")
 def new_inproceedings():
     return render_template("new_inproceedings.html")
+
+@app.route("/create_inproceedings", methods=["POST"])
+def add_inproceedings_to_references():
+    author = request.form.get("author")
+    title = request.form.get("title")
+    booktitle = request.form.get("booktitle")
+    year = request.form.get("year")
+
+    try:
+        add_inproceedings_reference(author, title, booktitle, year)
+        return redirect("/")
+    except Exception as error:
+        flash(str(error))
+        return redirect("/new_inproceedings")
 
 @app.route("/new_book")
 def new_book():
