@@ -1,6 +1,7 @@
 from flask import redirect, render_template, request, jsonify, flash
 from db_helper import reset_db
 from repositories.todo_repository import get_todos, create_todo, set_done
+from repositories.book_repositories import add_book_reference
 from config import app, test_env
 from util import validate_todo
 
@@ -13,6 +14,26 @@ def index():
 @app.route("/new_todo")
 def new():
     return render_template("new_todo.html")
+
+@app.route("/new_book")
+def new_book():
+    return render_template("new_book.html")
+
+@app.route("/create_book", methods=["POST"])
+def add_book_to_references():
+    author = request.form.get("author")
+    title = request.form.get("title")
+    publisher = request.form.get("publisher")
+    year = request.form.get("year")
+
+    try:
+        add_book_reference(author, title, publisher, year)
+        return redirect("/")
+    except Exception as error:
+        flash(str(error))
+        return redirect("/new_book")
+
+    
 
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():
