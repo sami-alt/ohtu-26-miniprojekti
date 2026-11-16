@@ -1,7 +1,7 @@
 from flask import redirect, render_template, request, jsonify, flash
 from db_helper import reset_db
 from repositories.todo_repository import get_todos, create_todo, set_done
-from repositories.book_repositories import add_book_reference
+from repositories.book_repositories import add_book_reference, get_book_references
 from config import app, test_env
 from util import validate_todo
 
@@ -33,7 +33,13 @@ def add_book_to_references():
         flash(str(error))
         return redirect("/new_book")
 
-    
+
+@app.route("/source_listing")
+def source_listing():
+    references = get_book_references()
+    print("References: ", references[0].fields)
+    return render_template("source_listing.html", references=references)
+
 
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():
