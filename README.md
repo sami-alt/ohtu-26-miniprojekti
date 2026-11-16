@@ -1,20 +1,18 @@
-## Ohtu miniprojekti boilerplate
-
-Lue [täältä](https://studies.cs.helsinki.fi/ohtu/flask/) lisää.
-
-Muutamia vihjeitä projektin alkuun [täällä](https://github.com/ohjelmistotuotanto-hy/miniprojekti-boilerplate/blob/main/misc/ohjeita.md).
-
-Esimerkki product ja sprint backlogeista sekä ohje niiden tekemiseen GitHub Projectsilla [täällä](BACKLOG.md). Esimerkin backlogit esitellään myös kurssimateriaalin osassa 2, ks. [Esimerkki: backlogit GitHub Projectsilla](https://studies.cs.helsinki.fi/ohtu/osa2/#esimerkki-backlogit-github-projectsilla).
-
-### Sovelluksen vieminen OKD-klusterille
-
-Ohje sovelluksen viemiseen yliopiston OKD-klusterille [täällä](DEPLOYMENT.md). Ohjeessa kerrotaan myös, miten klusterilla oleva versio päivittyy automaattisesti ja milloin päivitys on tehtävä itse.
-
-Huomaa, että **klusterin tietokanta ei päivity automaattisesti**: tietokanta on alustettava itse ensimmäisen deployauksen jälkeen ja aina kun tietokannan rakenne muuttuu, ks. [Tietokanta klusterilla](DEPLOYMENT.md#tietokanta-klusterilla).
-
+## Ohtu miniprojekti
 
 [pelisaannot.md](pelisaannot.md)
 
 [Backlog](https://github.com/users/sami-alt/projects/2/views/1)
 
 [OKD-klusterilla toimiva sovellus](https://route-ohjelmistotuotanto-lahiopetus-2026-5.ext.okd-cs-test-0.k8s.cs.helsinki.fi/)
+
+### Definition of Done
+
+- User storyille tulee määritellä hyväksymiskriteerit, jotka dokumentoidaan sprintistä 2 alkaen Robot Frameworkin testeillä.
+- Toteutetun koodin testikattavuuden tulee olla kohtuullinen
+- Asiakas pääsee näkemään koko ajan koodin ja testien tilanteen CI-palvelusta
+- Koodin ylläpidettävyyden tulee olla mahdollisimman hyvä
+    - järkevä nimeäminen
+    - järkevä/selkeä ja perusteltu arkkitehtuuri
+    - yhtenäinen koodityyli (valvotaan Pylintin avulla viikosta 2 alkaen)
+- Story on valmis vasta, kun se toimii OKD-klusterilla olevassa sovelluksen versiossa

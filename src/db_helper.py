@@ -37,10 +37,16 @@ def setup_db():
   schema_path = os.path.join(os.path.dirname(__file__), 'schema.sql')
   with open(schema_path, 'r') as f:
     schema_sql = f.read().strip()
-  
-  sql = text(schema_sql)
-  db.session.execute(sql)
+
+  for stmt in schema_sql.split(';'):
+    if stmt.strip():
+      sql = text(stmt)
+      db.session.execute(sql)
   db.session.commit()
+  
+  #sql = text(schema_sql)
+  #db.session.execute(sql)
+  #db.session.commit()
 
 if __name__ == "__main__":
     with app.app_context():
