@@ -2,7 +2,7 @@ CREATE TABLE todos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   content TEXT NOT NULL,
   done BOOLEAN DEFAULT FALSE
-)
+);
 
 CREATE TABLE articles (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,4 +13,4 @@ CREATE TABLE articles (
   volume TEXT,
   number TEXT,
   pages TEXT
-)
+);
