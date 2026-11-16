@@ -3,3 +3,14 @@ CREATE TABLE todos (
   content TEXT NOT NULL,
   done BOOLEAN DEFAULT FALSE
 )
+
+CREATE TABLE articles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  author TEXT NOT NULL,
+  title TEXT NOT NULL,
+  journal TEXT NOT NULL,
+  year INTEGER NOT NULL,
+  volume TEXT,
+  number TEXT,
+  pages TEXT
+)
