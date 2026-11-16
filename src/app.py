@@ -37,7 +37,6 @@ def add_book_to_references():
 @app.route("/source_listing")
 def source_listing():
     references = get_book_references()
-    print("References: ", references[0].fields)
     return render_template("source_listing.html", references=references)
 
 
