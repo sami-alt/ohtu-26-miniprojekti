@@ -12,9 +12,9 @@
 ## Koodaus ja versionhallinta
 - Main branchiin vain toimivaa koodia.
 - Joka user storylle tehdään oma feature branch.
+- Jokaisesta feature branchista tehdään pull request, jonka joku muu kuin branchin kehittäjä katselmoi.
 - Käytetään PEP-8 -tyyliä.
 - Tekoälyä voi käyttää, mutta pitää ymmärtää sen tuottama koodi myös itse.
 
 ## Kehitys
-
-Kehityksen alla on samanaikaisesti vain nelä taskia.
+- Kehityksen alla on samanaikaisesti vain neljä taskia.
