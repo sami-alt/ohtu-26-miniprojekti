@@ -1,0 +1,25 @@
+.references {
+  list-style: none;
+  padding: 0;
+  max-width: 40rem;
+}
+
+.references li {
+  border: 1px solid black;
+  padding: 0.4rem 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.references dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.2rem 0.8rem;
+}
+
+.references dt {
+  font-weight: bold;
+}
+
+.references dd {
+  margin: 0;
+}
