@@ -43,7 +43,6 @@ def source_listing():
     references = get_book_references()
     return render_template("source_listing.html", references=references)
 
->>>>>>> origin/main
 
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():
