@@ -11,3 +11,12 @@ CREATE TABLE books (
   publisher TEXT,
   year TEXT
 );
+
+CREATE TABLE inproceedings (
+  id INTEGER PRIMARY KEY,
+  author TEXT,
+  title TEXT,
+  booktitle TEXT,
+  year TEXT,
+  pages TEXT
+);
