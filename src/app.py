@@ -62,13 +62,6 @@ def add_book_to_references():
         flash(str(error))
         return redirect("/new_book")
 
-
-@app.route("/source_listing")
-def source_listing():
-    references = get_book_references() + get_articles()
-    return render_template("source_listing.html", references=references)
-
-
 @app.route("/new_article")
 def new_article():
     return render_template("new_article.html")
@@ -109,7 +102,7 @@ def toggle_todo(todo_id):
 
 @app.route("/source_listing")
 def source_listing():
-    references = get_book_references() + get_inproceedings_references()
+    references = get_book_references() + get_articles() + get_inproceedings_references()
     return render_template("source_listing.html", references=references)
 
 # testausta varten oleva reitti
