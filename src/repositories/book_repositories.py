@@ -1,35 +1,30 @@
+"""This module is deprecated"""
+
+import uuid
+
 from config import db
 from sqlalchemy import text
 
 from entities.reference import Reference
 
+import repositories.reference_repository as refrep
+
 def get_book_references():
-    query = text("SELECT author, title, publisher, year FROM books")
-    res = db.session.execute(query)
-    return [Reference("book", "", {
-        "author": row[0],
-        "title": row[1],
-        "publisher": row[2],
-        "year": row[3]
-    }) for row in res.fetchall()]
+    refs = refrep.get_references_by_type("book")
+
+    # Strip citation keys for ✨backwards-compability✨
+    for ref in refs:
+        ref.citation_key = ""
+
+    return refs
+
+    
 
 def add_book_reference(author, title, publisher, year):
-    query = text("""
-        INSERT INTO books (author, title, publisher,year)
-        values (:author, :title, :publisher, :year)
-    """)
-
-    params = {
-        "author":author,
-        "title":title,
-        "publisher":publisher,
-        "year": year
-    }
-    try:
-        db.session.execute(query, params)
-        db.session.commit()
-    except  Exception:
-        db.session.rollback()
-        raise
-
-
+    ref = Reference("book", str(uuid.uuid4()), {
+        "author": author,
+        "title": title,
+        "publisher": publisher,
+        "year": year,
+    })
+    refrep.add_reference(ref)

@@ -16,7 +16,7 @@ class TestArticleRepository(unittest.TestCase):
             test_fields = {
                 "title": "Software Testing",
                 "author": "Ada Lovelace",
-                "year": 2026,
+                "year": "2026",
                 "journal": "Journal of Testing",
                 "volume": "12",
                 "number": "3",
@@ -28,7 +28,7 @@ class TestArticleRepository(unittest.TestCase):
                 "author": "Ada Lovelace",
                 "title": "Software Testing",
                 "journal": "Journal of Testing",
-                "year": 2026,
+                "year": "2026",
                 "volume": "12",
                 "number": "3",
                 "pages": "10-20",
