@@ -3,9 +3,10 @@ from sqlalchemy import text
 import os
 
 def reset_db():
-  print(f"Clearing contents from table todos")
-  sql = text(f"DELETE FROM todos")
-  db.session.execute(sql)
+  for table in tables():
+    print(f"Clearing contents from table {table}")
+    sql = text(f"DELETE FROM {table}")
+    db.session.execute(sql)
   db.session.commit()
 
 def tables():
@@ -43,6 +44,10 @@ def setup_db():
       sql = text(stmt)
       db.session.execute(sql)
   db.session.commit()
+  
+  #sql = text(schema_sql)
+  #db.session.execute(sql)
+  #db.session.commit()
 
 if __name__ == "__main__":
     with app.app_context():

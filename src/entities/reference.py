@@ -12,3 +12,4 @@ class Reference:
             return f"@{self.type}{{{self.citation_key}, {fields_str}}}"
         else:
             return f"@{self.type}{{{self.citation_key}}}"
+

@@ -4,6 +4,15 @@ CREATE TABLE todos (
   done BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE books (
+  id INTEGER PRIMARY KEY,
+  author TEXT,
+  title TEXT,
+  publisher TEXT,
+  year TEXT
+);
+);
+
 CREATE TABLE articles (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   author TEXT NOT NULL,
