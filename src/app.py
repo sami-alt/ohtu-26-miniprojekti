@@ -2,6 +2,10 @@ from flask import redirect, render_template, request, jsonify, flash
 from db_helper import reset_db
 from repositories.todo_repository import get_todos, create_todo, set_done
 from repositories.book_repositories import add_book_reference, get_book_references
+from repositories.inproceedings_repository import (
+    add_inproceedings_reference,
+    get_inproceedings_references,
+)
 from config import app, test_env
 from util import validate_todo
 
@@ -14,6 +18,30 @@ def index():
 @app.route("/new_todo")
 def new():
     return render_template("new_todo.html")
+
+@app.route("/new_inproceedings")
+def new_inproceedings():
+    return render_template("new_inproceedings.html")
+
+@app.route("/create_inproceedings", methods=["POST"])
+def add_inproceedings_to_references():
+    author = request.form.get("author", "").strip()
+    title = request.form.get("title", "").strip()
+    booktitle = request.form.get("booktitle", "").strip()
+    year = request.form.get("year", "").strip()
+    pages = request.form.get("pages", "").strip()
+
+    try:
+        if not author or not title or not booktitle or not year:
+            raise ValueError(
+                "Author, title, conference proceedings title, and year are required."
+            )
+        int(year)
+        add_inproceedings_reference(author, title, booktitle, year, pages)
+        return redirect("/source_listing")
+    except Exception as error:
+        flash(str(error))
+        return redirect("/new_inproceedings")
 
 @app.route("/new_book")
 def new_book():
@@ -34,12 +62,6 @@ def add_book_to_references():
         return redirect("/new_book")
 
 
-@app.route("/source_listing")
-def source_listing():
-    references = get_book_references()
-    return render_template("source_listing.html", references=references)
-
-
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():
     content = request.form.get("content")
@@ -56,6 +78,11 @@ def todo_creation():
 def toggle_todo(todo_id):
     set_done(todo_id)
     return redirect("/")
+
+@app.route("/source_listing")
+def source_listing():
+    references = get_book_references() + get_inproceedings_references()
+    return render_template("source_listing.html", references=references)
 
 # testausta varten oleva reitti
 if test_env:
