@@ -25,14 +25,20 @@ def new_inproceedings():
 
 @app.route("/create_inproceedings", methods=["POST"])
 def add_inproceedings_to_references():
-    author = request.form.get("author")
-    title = request.form.get("title")
-    booktitle = request.form.get("booktitle")
-    year = request.form.get("year")
+    author = request.form.get("author", "").strip()
+    title = request.form.get("title", "").strip()
+    booktitle = request.form.get("booktitle", "").strip()
+    year = request.form.get("year", "").strip()
+    pages = request.form.get("pages", "").strip()
 
     try:
-        add_inproceedings_reference(author, title, booktitle, year)
-        return redirect("/")
+        if not author or not title or not booktitle or not year:
+            raise ValueError(
+                "Author, title, conference proceedings title, and year are required."
+            )
+        int(year)
+        add_inproceedings_reference(author, title, booktitle, year, pages)
+        return redirect("/source_listing")
     except Exception as error:
         flash(str(error))
         return redirect("/new_inproceedings")
@@ -72,6 +78,11 @@ def todo_creation():
 def toggle_todo(todo_id):
     set_done(todo_id)
     return redirect("/")
+
+@app.route("/source_listing")
+def source_listing():
+    references = get_book_references() + get_inproceedings_references()
+    return render_template("source_listing.html", references=references)
 
 # testausta varten oleva reitti
 if test_env:
