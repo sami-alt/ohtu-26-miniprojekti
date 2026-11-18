@@ -5,8 +5,12 @@ from entities.reference import Reference
 
 def add_article(title, author, year, journal, volume, number, pages):
     sql = text("INSERT INTO articles (author, title, journal, year, volume, number, pages) VALUES (:author, :title, :journal, :year, :volume, :number, :pages)")
-    db.session.execute(sql, {"author": author, "title": title, "journal": journal, "year": year, "volume": volume, "number": number, "pages": pages})
-    db.session.commit()
+    try:
+        db.session.execute(sql, {"author": author, "title": title, "journal": journal, "year": year, "volume": volume, "number": number, "pages": pages})
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        raise
 
 def get_articles():
     query = text("select author, title, journal, year, volume, number, pages from articles")

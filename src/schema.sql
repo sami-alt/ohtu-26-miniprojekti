@@ -11,7 +11,6 @@ CREATE TABLE books (
   publisher TEXT,
   year TEXT
 );
-);
 
 CREATE TABLE articles (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

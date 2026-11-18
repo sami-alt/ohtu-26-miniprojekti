@@ -2,6 +2,7 @@ from flask import redirect, render_template, request, jsonify, flash
 from db_helper import reset_db
 from repositories.todo_repository import get_todos, create_todo, set_done
 from repositories.book_repositories import add_book_reference, get_book_references
+from repositories.article_repository import add_article, get_articles
 from config import app, test_env
 from util import validate_todo
 
@@ -36,13 +37,30 @@ def add_book_to_references():
 
 @app.route("/source_listing")
 def source_listing():
-    references = get_book_references()
+    references = get_book_references() + get_articles()
     return render_template("source_listing.html", references=references)
 
 
 @app.route("/new_article")
 def new_article():
     return render_template("new_article.html")
+
+@app.route("/create_article", methods=["POST"])
+def add_article_to_references():
+    author = request.form.get("author")
+    title = request.form.get("title")
+    journal = request.form.get("journal")
+    year = request.form.get("year")
+    volume = request.form.get("volume") or None
+    number = request.form.get("number") or None
+    pages = request.form.get("pages") or None
+
+    try:
+        add_article(title, author, year, journal, volume, number, pages)
+        return redirect("/")
+    except Exception as error:
+        flash(str(error))
+        return redirect("/new_article")
 
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():

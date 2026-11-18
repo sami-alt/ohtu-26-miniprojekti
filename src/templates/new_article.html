@@ -9,6 +9,15 @@ Add a journal article
 <h2>Add a journal article</h2>
 
 <form action="/create_article" method="post">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
   <label for="author">Author</label>
   <input type="text" id="author" name="author" required>
   <br>
