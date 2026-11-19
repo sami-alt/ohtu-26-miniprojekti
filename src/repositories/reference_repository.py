@@ -58,4 +58,8 @@ def _add_fields(reference_key: str, fields: dict[str, str]) -> None:
         })
     db.session.commit()
 
-
+def delete_reference(citation_key: str) -> None:
+    """Delete a reference (including it's fields) from the repository."""
+    query = text("DELETE FROM reference_entries WHERE citation_key = :ref_key")
+    db.session.execute(query, {"ref_key": citation_key})
+    db.session.commit()

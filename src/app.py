@@ -7,6 +7,9 @@ from repositories.inproceedings_repository import (
     add_inproceedings_reference,
     get_inproceedings_references,
 )
+
+from repositories.reference_repository import delete_reference, get_references
+
 from config import app, test_env
 from util import validate_todo
 
@@ -83,6 +86,17 @@ def add_article_to_references():
         flash(str(error))
         return redirect("/new_article")
 
+@app.route("/delete_reference_by_citation_key/<citation_key>", methods=["POST"])
+def delete_reference_by_citation_key(citation_key):
+    print("Here")
+    print(f"Deleting reference with citation key: {citation_key}")
+    try:
+        delete_reference(citation_key)
+        return redirect("/source_listing")
+    except Exception as error:
+        flash(str(error))
+        return redirect("/source_listing")
+
 @app.route("/create_todo", methods=["POST"])
 def todo_creation():
     content = request.form.get("content")
@@ -102,7 +116,9 @@ def toggle_todo(todo_id):
 
 @app.route("/source_listing")
 def source_listing():
-    references = get_book_references() + get_articles() + get_inproceedings_references()
+    #references = get_book_references() + get_articles() + get_inproceedings_references()
+    references = get_references()
+  
     return render_template("source_listing.html", references=references)
 
 # testausta varten oleva reitti

@@ -15,7 +15,10 @@
         {% for name, value in reference.fields.items() if value %}
           <dt>{{ name | capitalize }}</dt>
           <dd>{{ value }}</dd>
-        {% endfor %}
+          {% endfor %}
+          <dd><form action="/delete_reference_by_citation_key/{{ reference.citation_key }}" method="post">
+            <input type="submit" value="Delete">
+        </form></dd>
       </dl>
     </li>
     {% endfor %}
@@ -23,5 +26,4 @@
 {% else %}
   <p>No sources available.</p>
 {% endif %}
-
 {% endblock %}
