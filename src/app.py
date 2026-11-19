@@ -25,7 +25,25 @@ def new():
 
 @app.route("/new_inproceedings")
 def new_inproceedings():
-    return render_template("new_inproceedings.html")
+    return render_template(
+        "new_source.html",
+        title="Add a conference paper",
+        page_title="Add a conference paper",
+        action="/create_inproceedings",
+        submit_label="Add a conference paper",
+        fields=[
+            {"name": "author", "label": "Author", "type": "text", "required": True},
+            {"name": "title", "label": "Title", "type": "text", "required": True},
+            {
+                "name": "booktitle",
+                "label": "Conference proceedings title",
+                "type": "text",
+                "required": True,
+            },
+            {"name": "year", "label": "Year", "type": "number", "required": True},
+            {"name": "pages", "label": "Pages", "type": "text", "required": False},
+        ],
+    )
 
 @app.route("/create_inproceedings", methods=["POST"])
 def add_inproceedings_to_references():
@@ -49,7 +67,24 @@ def add_inproceedings_to_references():
 
 @app.route("/new_book")
 def new_book():
-    return render_template("new_book.html")
+    return render_template(
+        "new_source.html",
+        title="Add a book",
+        page_title="Add book",
+        action="/create_book",
+        submit_label="Add book",
+        fields=[
+            {"name": "author", "label": "Author", "type": "text", "required": True},
+            {"name": "title", "label": "Title", "type": "text", "required": True},
+            {
+                "name": "publisher",
+                "label": "Publisher",
+                "type": "text",
+                "required": True,
+            },
+            {"name": "year", "label": "Year", "type": "number", "required": True},
+        ],
+    )
 
 @app.route("/create_book", methods=["POST"])
 def add_book_to_references():
@@ -67,7 +102,22 @@ def add_book_to_references():
 
 @app.route("/new_article")
 def new_article():
-    return render_template("new_article.html")
+    return render_template(
+        "new_source.html",
+        title="Add a journal article",
+        page_title="Add a journal article",
+        action="/create_article",
+        submit_label="Add article",
+        fields=[
+            {"name": "author", "label": "Author", "type": "text", "required": True},
+            {"name": "title", "label": "Title", "type": "text", "required": True},
+            {"name": "journal", "label": "Journal", "type": "text", "required": True},
+            {"name": "year", "label": "Year", "type": "number", "required": True},
+            {"name": "volume", "label": "Volume", "type": "text", "required": False},
+            {"name": "number", "label": "Number", "type": "text", "required": False},
+            {"name": "pages", "label": "Pages", "type": "text", "required": False},
+        ],
+    )
 
 @app.route("/create_article", methods=["POST"])
 def add_article_to_references():
