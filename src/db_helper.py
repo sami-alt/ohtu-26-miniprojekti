@@ -1,6 +1,9 @@
-from config import db, app
-from sqlalchemy import text
 import os
+
+from sqlalchemy import text
+
+from config import db, app
+
 
 def reset_db():
     for table in tables():
@@ -33,10 +36,10 @@ def setup_db():
         db.session.commit()
 
     print("Creating database")
-    
+
     # Read schema from schema.sql file
     schema_path = os.path.join(os.path.dirname(__file__), 'schema.sql')
-    with open(schema_path, 'r') as f:
+    with open(schema_path, 'r', encoding="UTF-8") as f:
         schema_sql = f.read().strip()
 
     for stmt in schema_sql.split(';'):
@@ -44,7 +47,7 @@ def setup_db():
             sql = text(stmt)
             db.session.execute(sql)
     db.session.commit()
-    
+
     #sql = text(schema_sql)
     #db.session.execute(sql)
     #db.session.commit()

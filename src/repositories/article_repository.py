@@ -1,25 +1,32 @@
+"""This module is deprecated"""
+
+import uuid
+
 from config import db
 from sqlalchemy import text
 from entities.reference import Reference
+import repositories.reference_repository as refrep
 
 
 def add_article(title, author, year, journal, volume, number, pages):
-    sql = text("INSERT INTO articles (author, title, journal, year, volume, number, pages) VALUES (:author, :title, :journal, :year, :volume, :number, :pages)")
-    try:
-        db.session.execute(sql, {"author": author, "title": title, "journal": journal, "year": year, "volume": volume, "number": number, "pages": pages})
-        db.session.commit()
-    except Exception:
-        db.session.rollback()
-        raise
+    ref = Reference("article", str(uuid.uuid4()), {
+        "author": author,
+        "title": title,
+        "journal": journal,
+        "year": year,
+        "volume": volume,
+        "number": number,
+        "pages": pages
+    })
+
+    refrep.add_reference(ref)
+
 
 def get_articles():
-    query = text("select author, title, journal, year, volume, number, pages from articles")
-    result = db.session.execute(query)
-    return [Reference("article", "",{
-        "author": row[0], 
-        "title": row[1], 
-        "journal": row[2], 
-        "year": row[3], 
-        "volume": row[4],
-        "number": row[5], 
-        "pages": row[6]}) for row in result.fetchall()]
+    refs = refrep.get_references_by_type("article")
+
+    # Strip citation keys for ✨backwards-compability✨
+    for ref in refs:
+        ref.citation_key = ""
+
+    return refs
