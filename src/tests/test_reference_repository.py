@@ -62,4 +62,29 @@ class TestReferenceRepository(unittest.TestCase):
             res = refrep.get_references_by_type("article")
             cmp = filter(lambda x: x.type == "article", self.test_refs)
             self.assertSequenceEqual(res, list(cmp))
+
+    def test_key_autodelete(self):
+        with app.app_context():
+            ref = Reference(
+                type="article",
+                citation_key="smith2024",
+                fields={
+                    "author": "Jane Smith",
+                    "title": "A Study of Example Systems",
+                    "journal": "Journal of Dummy Research",
+                    "year": "2024",
+                }
+            )
+            refrep.add_reference(ref)
+            res = refrep.get_references()[0]
+            self.assertDictEqual(res.fields, ref.fields)
+
+            refrep.delete_reference(ref.citation_key)
+
+            refrep.add_reference(ref)
+            res = refrep.get_references()[0]
+            self.assertDictEqual(res.fields, ref.fields)
+
+            
+            refrep.delete_reference("smith2024")
         
