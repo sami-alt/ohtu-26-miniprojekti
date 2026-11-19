@@ -1,6 +1,5 @@
 from flask import redirect, render_template, request, jsonify, flash
 from db_helper import reset_db
-from repositories.todo_repository import get_todos, create_todo, set_done
 from repositories.book_repositories import add_book_reference, get_book_references
 from repositories.article_repository import add_article, get_articles
 from repositories.inproceedings_repository import (
@@ -8,17 +7,10 @@ from repositories.inproceedings_repository import (
     get_inproceedings_references,
 )
 from config import app, test_env
-from util import validate_todo
 
 @app.route("/")
 def index():
-    todos = get_todos()
-    unfinished = len([todo for todo in todos if not todo.done])
-    return render_template("index.html", todos=todos, unfinished=unfinished) 
-
-@app.route("/new_todo")
-def new():
-    return render_template("new_todo.html")
+    return render_template("index.html")
 
 @app.route("/new_inproceedings")
 def new_inproceedings():
@@ -82,23 +74,6 @@ def add_article_to_references():
     except Exception as error:
         flash(str(error))
         return redirect("/new_article")
-
-@app.route("/create_todo", methods=["POST"])
-def todo_creation():
-    content = request.form.get("content")
-
-    try:
-        validate_todo(content)
-        create_todo(content)
-        return redirect("/")
-    except Exception as error:
-        flash(str(error))
-        return  redirect("/new_todo")
-
-@app.route("/toggle_todo/<todo_id>", methods=["POST"])
-def toggle_todo(todo_id):
-    set_done(todo_id)
-    return redirect("/")
 
 @app.route("/source_listing")
 def source_listing():
