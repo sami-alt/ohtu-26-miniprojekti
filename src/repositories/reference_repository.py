@@ -1,6 +1,6 @@
-from config import db
 from sqlalchemy import text
 
+from config import db
 from entities.reference import Reference
 
 def get_references() -> list[Reference]:
@@ -58,8 +58,19 @@ def _add_fields(reference_key: str, fields: dict[str, str]) -> None:
         })
     db.session.commit()
 
+
+def create_reference(typ: str, citation_key: str, fields: dict[str, str]) -> None:
+    """Utility function. Equivalent to add_reference(Reference(typ, citation_key, fields))"""
+    add_reference(Reference(typ, citation_key, fields))
+
+
 def delete_reference(citation_key: str) -> None:
     """Delete a reference (including it's fields) from the repository."""
     query = text("DELETE FROM reference_entries WHERE citation_key = :ref_key")
     db.session.execute(query, {"ref_key": citation_key})
     db.session.commit()
+
+def replace_reference(citation_key: str, reference: Reference) -> None:
+    """Utility function. Equivalent to delete_reference(citation_key); add_reference(reference)."""
+    delete_reference(citation_key)
+    add_reference(reference)
