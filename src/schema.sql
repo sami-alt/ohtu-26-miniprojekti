@@ -4,30 +4,13 @@ CREATE TABLE todos (
   done BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE books (
-  id INTEGER PRIMARY KEY,
-  author TEXT,
-  title TEXT,
-  publisher TEXT,
-  year TEXT
+CREATE TABLE reference_entries (
+  reference_type TEXT NOT NULL,
+  citation_key TEXT PRIMARY KEY NOT NULL
 );
 
-CREATE TABLE articles (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  author TEXT NOT NULL,
-  title TEXT NOT NULL,
-  journal TEXT NOT NULL,
-  year INTEGER NOT NULL,
-  volume TEXT,
-  number TEXT,
-  pages TEXT
-);
-
-CREATE TABLE inproceedings (
-  id INTEGER PRIMARY KEY,
-  author TEXT,
-  title TEXT,
-  booktitle TEXT,
-  year TEXT,
-  pages TEXT
+CREATE TABLE reference_fields (
+  reference_key TEXT REFERENCES reference_entries(citation_key) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  value TEXT
 );
