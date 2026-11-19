@@ -1,30 +1,7 @@
-{% extends "layout.html" %} {% block title %} Todo app {% endblock %} {% block
-body %}
-
-<h2>Todo app</h2>
-
-<div>things still unfinished: {{ unfinished }}</div>
-
-<ul>
-  {% for todo in todos %}
-  <li style="display: flex">
-    <div>{{ todo }}</div>
-    {% if not todo.done %}
-    <form
-      action="/toggle_todo/{{ todo.id }}"
-      method="post"
-      style="margin-left: 10px"
-    >
-      <button type="submit">mark as done</button>
-    </form>
-    {% endif %}
-  </li>
-  {% endfor %}
-</ul>
-
-<div>
-  <a href="/new_todo">Create new todo</a>
-</div>
+{% extends "layout.html" %} {% block title %} Reference app {% endblock %} {% block
+   body %}
+   
+<h2>Reference app</h2>
 
 <div>
   <a href="{{ url_for('new_book') }}">Add a book</a>
@@ -36,8 +13,23 @@ body %}
   <a href="{{ url_for('new_article') }}">Add an article</a>
 </div>
 
-<div>
-  <a href="{{ url_for('source_listing') }}">Source listing</a>
-</div>
+{% if references %}
+  <ul class="references">
+    {% for reference in references %}
+    <li>
+      <dl>
+        <dt>Type</dt>
+        <dd>{{ reference.type }}</dd>
+        {% for name, value in reference.fields.items() if value %}
+          <dt>{{ name | capitalize }}</dt>
+          <dd>{{ value }}</dd>
+        {% endfor %}
+      </dl>
+    </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No sources available.</p>
+{% endif %}
 
 {% endblock %}

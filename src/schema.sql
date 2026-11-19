@@ -1,9 +1,3 @@
-CREATE TABLE todos (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  content TEXT NOT NULL,
-  done BOOLEAN DEFAULT FALSE
-);
-
 CREATE TABLE reference_entries (
   reference_type TEXT NOT NULL,
   citation_key TEXT PRIMARY KEY NOT NULL
