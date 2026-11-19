@@ -1,6 +1,6 @@
 {% extends "layout.html" %} {% block title %} Reference app {% endblock %} {% block
-body %}
-
+   body %}
+   
 <h2>Reference app</h2>
 
 <div>
@@ -13,8 +13,23 @@ body %}
   <a href="{{ url_for('new_article') }}">Add an article</a>
 </div>
 
-<div>
-  <a href="{{ url_for('source_listing') }}">Source listing</a>
-</div>
+{% if references %}
+  <ul class="references">
+    {% for reference in references %}
+    <li>
+      <dl>
+        <dt>Type</dt>
+        <dd>{{ reference.type }}</dd>
+        {% for name, value in reference.fields.items() if value %}
+          <dt>{{ name | capitalize }}</dt>
+          <dd>{{ value }}</dd>
+        {% endfor %}
+      </dl>
+    </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No sources available.</p>
+{% endif %}
 
 {% endblock %}

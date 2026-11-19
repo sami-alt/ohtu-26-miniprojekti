@@ -28,8 +28,8 @@ class TestInproceedingsForm(unittest.TestCase):
         })
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.headers["Location"], "/source_listing")
-        listing = self.client.get("/source_listing")
+        self.assertEqual(response.headers["Location"], "/")
+        listing = self.client.get("/")
         for value in (
             "inproceedings",
             "Jove Tansson",

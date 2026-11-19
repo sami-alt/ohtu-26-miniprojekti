@@ -5,15 +5,8 @@ Suite Teardown   Close Browser
 Test Setup       Reset Database
 
 *** Test Cases ***
-Source listing can be opened from the home page
-    Go To  ${HOME_URL}
-    Click  text=Source listing
-    Get Url  ==  ${HOME_URL}/source_listing
-    Get Title  ==  Source Listing
-    Get Text  h2  ==  Source Listing
-
 Message is shown when there are no sources
-    Go To  ${HOME_URL}/source_listing
+    Go To  ${HOME_URL}
     Get Text  body  *=  No sources available.
     
 Added book is shown in the source listing
@@ -24,7 +17,7 @@ Added book is shown in the source listing
     Fill Text  [name="year"]       2008
     Click  button >> text=Add book
     
-    Go To  ${HOME_URL}/source_listing
+    Go To  ${HOME_URL}
     Get Text  .references dd:nth-of-type(1)  ==  book
     Get Text  .references dd:nth-of-type(2)  ==  Robert C. Martin
     Get Text  .references dd:nth-of-type(3)  ==  Clean Code

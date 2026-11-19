@@ -10,7 +10,8 @@ from config import app, test_env
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    references = get_book_references() + get_articles() + get_inproceedings_references()
+    return render_template("index.html", references=references)
 
 @app.route("/new_inproceedings")
 def new_inproceedings():
@@ -31,7 +32,7 @@ def add_inproceedings_to_references():
             )
         int(year)
         add_inproceedings_reference(author, title, booktitle, year, pages)
-        return redirect("/source_listing")
+        return redirect("/")
     except Exception as error:
         flash(str(error))
         return redirect("/new_inproceedings")
@@ -74,11 +75,6 @@ def add_article_to_references():
     except Exception as error:
         flash(str(error))
         return redirect("/new_article")
-
-@app.route("/source_listing")
-def source_listing():
-    references = get_book_references() + get_articles() + get_inproceedings_references()
-    return render_template("source_listing.html", references=references)
 
 # testausta varten oleva reitti
 if test_env:
