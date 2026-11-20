@@ -1,11 +1,8 @@
 from flask import redirect, render_template, request, jsonify, flash
 from db_helper import reset_db
-from repositories.book_repositories import add_book_reference, get_book_references
-from repositories.article_repository import add_article, get_articles
-from repositories.inproceedings_repository import (
-    add_inproceedings_reference,
-    get_inproceedings_references,
-)
+from repositories.book_repositories import add_book_reference
+from repositories.article_repository import add_article
+from repositories.inproceedings_repository import add_inproceedings_reference
 
 from repositories.reference_repository import delete_reference, get_references
 
@@ -15,6 +12,10 @@ from config import app, test_env
 def index():
     references = get_references()
     return render_template("index.html", references=references)
+
+@app.route("/new_source", methods=["GET"])
+def choose_source_type():
+    return render_template("source_type_selection.html")
 
 @app.route("/new_inproceedings")
 def new_inproceedings():
@@ -131,8 +132,6 @@ def add_article_to_references():
 
 @app.route("/delete_reference_by_citation_key/<citation_key>", methods=["POST"])
 def delete_reference_by_citation_key(citation_key):
-    print("Here")
-    print(f"Deleting reference with citation key: {citation_key}")
     try:
         delete_reference(citation_key)
         return redirect("/")
