@@ -6,7 +6,18 @@
 
 {% block body %}
 
-<h2>{{ title }}</h2>
+<h2>{% if source %}{{ source.title }}{% else %}Select source type{% endif %}</h2>
+
+<form method="get" action="{{ url_for('choose_source_type') }}">
+  <label for="source_type">Source type</label>
+  <select id="source_type" name="type" required>
+    <option value="" disabled{% if not source_type %} selected{% endif %}>Choose a source type</option>
+    {% for type_name, type_info in source_types.items() %}
+      <option value="{{ type_name }}"{% if source_type == type_name %} selected{% endif %}>{{ type_info.label }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Continue</button>
+</form>
 
 {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -18,15 +29,17 @@
   {% endif %}
 {% endwith %}
 
-<form method="post" action="{{ action }}">
-  {% for field in fields %}
-    <label for="{{ field.name }}">{{ field.label }}</label>
-    <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}"{% if field.required %} required{% endif %}>
-    <br>
-  {% endfor %}
-  <button type="submit">{{ submit_label }}</button>
-</form>
+{% if source %}
+  <form method="post" action="{{ source.action }}">
+    {% for field in source.fields %}
+      <label for="{{ field.name }}">{{ field.label }}</label>
+      <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}"{% if field.required %} required{% endif %}>
+      <br>
+    {% endfor %}
+    <button type="submit">{{ source.submit_label }}</button>
+  </form>
 
-<a href="{{ url_for('choose_source_type') }}">Back to source types</a>
+  <a href="{{ url_for('choose_source_type') }}">Back to source types</a>
+{% endif %}
 
 {% endblock %}

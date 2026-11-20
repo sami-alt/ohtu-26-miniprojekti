@@ -1,43 +1,169 @@
-from flask import redirect, render_template, request, jsonify, flash
-from db_helper import reset_db
-from repositories.book_repositories import add_book_reference
-from repositories.article_repository import add_article
-from repositories.inproceedings_repository import add_inproceedings_reference
-
-from repositories.reference_repository import delete_reference, get_references
+from flask import abort, flash, jsonify, redirect, render_template, request
 
 from config import app, test_env
+from db_helper import reset_db
+from repositories.article_repository import add_article
+from repositories.book_repositories import add_book_reference
+from repositories.inproceedings_repository import add_inproceedings_reference
+from repositories.reference_repository import delete_reference, get_references
 
-@app.route("/")
-def index():
-    references = get_references()
-    return render_template("index.html", references=references)
 
-@app.route("/new_source", methods=["GET"])
-def choose_source_type():
-    return render_template("source_type_selection.html")
-
-@app.route("/new_inproceedings")
-def new_inproceedings():
-    return render_template(
-        "new_source.html",
-        title="Add a conference paper",
-        page_title="Add a conference paper",
-        action="/create_inproceedings",
-        submit_label="Add a conference paper",
-        fields=[
-            {"name": "author", "label": "Author", "type": "text", "required": True},
-            {"name": "title", "label": "Title", "type": "text", "required": True},
+SOURCE_TYPES = {
+    "book": {
+        "label": "Book",
+        "title": "Add a book",
+        "page_title": "Add book",
+        "action": "/create_book",
+        "submit_label": "Add book",
+        "fields": [
+            {
+                "name": "author",
+                "label": "Author",
+                "type": "text",
+                "required": True,
+            },
+            {
+                "name": "title",
+                "label": "Title",
+                "type": "text",
+                "required": True,
+            },
+            {
+                "name": "publisher",
+                "label": "Publisher",
+                "type": "text",
+                "required": True,
+            },
+            {
+                "name": "year",
+                "label": "Year",
+                "type": "number",
+                "required": True,
+            },
+        ],
+    },
+    "article": {
+        "label": "Journal article",
+        "title": "Add a journal article",
+        "page_title": "Add a journal article",
+        "action": "/create_article",
+        "submit_label": "Add article",
+        "fields": [
+            {
+                "name": "author",
+                "label": "Author",
+                "type": "text",
+                "required": True,
+            },
+            {
+                "name": "title",
+                "label": "Title",
+                "type": "text",
+                "required": True,
+            },
+            {
+                "name": "journal",
+                "label": "Journal",
+                "type": "text",
+                "required": True,
+            },
+            {
+                "name": "year",
+                "label": "Year",
+                "type": "number",
+                "required": True,
+            },
+            {
+                "name": "volume",
+                "label": "Volume",
+                "type": "text",
+                "required": False,
+            },
+            {
+                "name": "number",
+                "label": "Number",
+                "type": "text",
+                "required": False,
+            },
+            {
+                "name": "pages",
+                "label": "Pages",
+                "type": "text",
+                "required": False,
+            },
+        ],
+    },
+    "inproceedings": {
+        "label": "Conference paper",
+        "title": "Add a conference paper",
+        "page_title": "Add a conference paper",
+        "action": "/create_inproceedings",
+        "submit_label": "Add a conference paper",
+        "fields": [
+            {
+                "name": "author",
+                "label": "Author",
+                "type": "text",
+                "required": True,
+            },
+            {
+                "name": "title",
+                "label": "Title",
+                "type": "text",
+                "required": True,
+            },
             {
                 "name": "booktitle",
                 "label": "Conference proceedings title",
                 "type": "text",
                 "required": True,
             },
-            {"name": "year", "label": "Year", "type": "number", "required": True},
-            {"name": "pages", "label": "Pages", "type": "text", "required": False},
+            {
+                "name": "year",
+                "label": "Year",
+                "type": "number",
+                "required": True,
+            },
+            {
+                "name": "pages",
+                "label": "Pages",
+                "type": "text",
+                "required": False,
+            },
         ],
+    },
+}
+
+
+def _render_source_form(source_type=None):
+    source = SOURCE_TYPES.get(source_type)
+    return render_template(
+        "new_source.html",
+        source=source,
+        source_type=source_type,
+        source_types=SOURCE_TYPES,
+        page_title=source["page_title"] if source else "Add source",
     )
+
+
+@app.route("/")
+def index():
+    references = get_references()
+    return render_template("index.html", references=references)
+
+
+@app.route("/new_source", methods=["GET"])
+def choose_source_type():
+    source_type = request.args.get("type")
+    if source_type and source_type not in SOURCE_TYPES:
+        abort(404)
+    return _render_source_form(source_type)
+
+
+@app.route("/new_inproceedings")
+def new_inproceedings():
+    return _render_source_form("inproceedings")
+
 
 @app.route("/create_inproceedings", methods=["POST"])
 def add_inproceedings_to_references():
@@ -50,7 +176,8 @@ def add_inproceedings_to_references():
     try:
         if not author or not title or not booktitle or not year:
             raise ValueError(
-                "Author, title, conference proceedings title, and year are required."
+                "Author, title, conference proceedings title, and year "
+                "are required."
             )
         int(year)
         add_inproceedings_reference(author, title, booktitle, year, pages)
@@ -59,26 +186,11 @@ def add_inproceedings_to_references():
         flash(str(error))
         return redirect("/new_inproceedings")
 
+
 @app.route("/new_book")
 def new_book():
-    return render_template(
-        "new_source.html",
-        title="Add a book",
-        page_title="Add book",
-        action="/create_book",
-        submit_label="Add book",
-        fields=[
-            {"name": "author", "label": "Author", "type": "text", "required": True},
-            {"name": "title", "label": "Title", "type": "text", "required": True},
-            {
-                "name": "publisher",
-                "label": "Publisher",
-                "type": "text",
-                "required": True,
-            },
-            {"name": "year", "label": "Year", "type": "number", "required": True},
-        ],
-    )
+    return _render_source_form("book")
+
 
 @app.route("/create_book", methods=["POST"])
 def add_book_to_references():
@@ -94,24 +206,11 @@ def add_book_to_references():
         flash(str(error))
         return redirect("/new_book")
 
+
 @app.route("/new_article")
 def new_article():
-    return render_template(
-        "new_source.html",
-        title="Add a journal article",
-        page_title="Add a journal article",
-        action="/create_article",
-        submit_label="Add article",
-        fields=[
-            {"name": "author", "label": "Author", "type": "text", "required": True},
-            {"name": "title", "label": "Title", "type": "text", "required": True},
-            {"name": "journal", "label": "Journal", "type": "text", "required": True},
-            {"name": "year", "label": "Year", "type": "number", "required": True},
-            {"name": "volume", "label": "Volume", "type": "text", "required": False},
-            {"name": "number", "label": "Number", "type": "text", "required": False},
-            {"name": "pages", "label": "Pages", "type": "text", "required": False},
-        ],
-    )
+    return _render_source_form("article")
+
 
 @app.route("/create_article", methods=["POST"])
 def add_article_to_references():
@@ -130,7 +229,11 @@ def add_article_to_references():
         flash(str(error))
         return redirect("/new_article")
 
-@app.route("/delete_reference_by_citation_key/<citation_key>", methods=["POST"])
+
+@app.route(
+    "/delete_reference_by_citation_key/<citation_key>",
+    methods=["POST"],
+)
 def delete_reference_by_citation_key(citation_key):
     try:
         delete_reference(citation_key)
@@ -142,7 +245,8 @@ def delete_reference_by_citation_key(citation_key):
 
 # testausta varten oleva reitti
 if test_env:
+
     @app.route("/reset_db")
     def reset_database():
         reset_db()
-        return jsonify({ 'message': "db reset" })
+        return jsonify({"message": "db reset"})
