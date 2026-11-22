@@ -66,6 +66,22 @@ def create_reference(typ: str, citation_key: str, fields: dict[str, str]) -> Non
     add_reference(Reference(typ, citation_key, fields))
 
 
+def update_reference(citation_key: str, fields: dict[str, str]) -> None:
+    """Add/update given fields of a reference. Other fields left as they are."""
+    with db.session.begin():
+        query = text("""
+            INSERT INTO reference_fields (reference_key, name, value)
+            VALUES (:ref_key, :name, :value)
+            ON CONFLICT (reference_key, name) DO UPDATE SET value = excluded.value
+        """)
+        for name, value in fields.items():
+            db.session.execute(query, {
+                "ref_key": citation_key,
+                "name": name,
+                "value": value or None
+            })
+
+
 def delete_reference(citation_key: str) -> None:
     """Delete a reference (including it's fields) from the repository."""
     with db.session.begin():
