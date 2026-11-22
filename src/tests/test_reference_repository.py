@@ -63,6 +63,37 @@ class TestReferenceRepository(unittest.TestCase):
             cmp = filter(lambda x: x.type == "article", self.test_refs)
             self.assertSequenceEqual(res, list(cmp))
 
+    def test_update(self):
+        with app.app_context():
+            ref = Reference(
+                type="article",
+                citation_key="smith2024",
+                fields={
+                    "author": "Jane Smith",
+                    "title": "A Study of Example Systems",
+                    "journal": "Journal of Dummy Research",
+                    "year": "2024",
+                },
+            )
+            refrep.add_reference(ref)
+            changed_fields = {
+                "author": "Tove Jansson",
+                "year": "1967"
+            }
+            refrep.update_reference(ref.citation_key, changed_fields)
+            new_ref = Reference(
+                type="article",
+                citation_key="smith2024",
+                fields={
+                    "author": "Tove Jansson",
+                    "title": "A Study of Example Systems",
+                    "journal": "Journal of Dummy Research",
+                    "year": "1967",
+                },
+            )
+            res = refrep.get_references()
+            self.assertSequenceEqual(res, [new_ref])
+
     def test_delete(self):
         with app.app_context():
             ref = Reference("book", "jansson03", {
