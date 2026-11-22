@@ -16,3 +16,4 @@ playwright-log.txt
 .AppleDouble
 .pytest_cache/
 opencode.json
+/.vscode/settings.json
