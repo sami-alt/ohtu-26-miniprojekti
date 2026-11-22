@@ -71,8 +71,3 @@ def delete_reference(citation_key: str) -> None:
     with db.session.begin():
         query = text("DELETE FROM reference_entries WHERE citation_key = :ref_key")
         db.session.execute(query, {"ref_key": citation_key})
-
-def replace_reference(citation_key: str, reference: Reference) -> None:
-    """Utility function. Equivalent to delete_reference(citation_key); add_reference(reference)."""
-    delete_reference(citation_key)
-    add_reference(reference)
