@@ -2,10 +2,15 @@ from flask import abort, flash, jsonify, redirect, render_template, request
 
 from config import app, test_env
 from db_helper import reset_db
+from entities import reference
 from repositories.article_repository import add_article
 from repositories.book_repositories import add_book_reference
 from repositories.inproceedings_repository import add_inproceedings_reference
-from repositories.reference_repository import delete_reference, get_references
+from repositories.reference_repository import (
+    delete_reference,
+    get_references,
+    replace_reference,
+)
 
 
 SOURCE_TYPES = {
@@ -145,6 +150,17 @@ def _render_source_form(source_type=None):
         page_title=source["page_title"] if source else "Add source",
     )
 
+def _render_modify_source_form(source_type=None, citation_key=None, reference=None):
+    source = SOURCE_TYPES.get(source_type)
+    return render_template(
+        "modify_source.html",
+        source=source,
+        source_type=source_type,
+        source_types=SOURCE_TYPES,
+        page_title=source["page_title"] if source else "Add source",
+        citation_key=citation_key,
+        reference=reference,
+    )
 
 @app.route("/")
 def index():
@@ -228,6 +244,59 @@ def add_article_to_references():
     except Exception as error:
         flash(str(error))
         return redirect("/new_article")
+
+@app.route("/modify_reference_by_citation_key/<citation_key>", methods=["POST"])
+def modify_reference(citation_key):
+        references = get_references()
+        reference_by_citation_key = next((ref for ref in references if ref.citation_key == citation_key), None)
+        if reference_by_citation_key is None:
+            flash(f"No reference found with citation key: {citation_key}")
+            return redirect("/")
+
+        return _render_modify_source_form(
+            source_type=reference_by_citation_key.type,
+            citation_key=citation_key,
+            reference=reference_by_citation_key,
+        )
+
+
+@app.route(
+    "/modify_reference/<citation_key>",
+    methods=["POST"],
+)   
+def modify_reference_by_citation_key(citation_key):
+    try:
+        references = get_references()
+        existing = next(
+            (ref for ref in references if ref.citation_key == citation_key),
+            None,
+        )
+        if existing is None:
+            raise ValueError(f"No reference found with citation key: {citation_key}")
+
+        source = SOURCE_TYPES.get(existing.type)
+        if source is None:
+            raise ValueError(f"Unknown reference type: {existing.type}")
+
+        fields = {}
+        for field in source["fields"]:
+            value = request.form.get(field["name"], "").strip()
+            if field["required"] and not value:
+                raise ValueError(f"{field['label']} is required.")
+            fields[field["name"]] = value
+
+        if "year" in fields:
+            int(fields["year"])
+
+        replace_reference(
+            citation_key,
+            reference.Reference(existing.type, citation_key, fields),
+        )
+        return redirect("/")
+    except Exception as error:
+        flash(str(error))
+        return redirect("/")
+
 
 
 @app.route(
