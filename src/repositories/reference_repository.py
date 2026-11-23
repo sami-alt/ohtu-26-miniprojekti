@@ -1,6 +1,6 @@
-from config import db
 from sqlalchemy import text
 
+from config import db
 from entities.reference import Reference
 
 def get_references() -> list[Reference]:
@@ -57,5 +57,3 @@ def _add_fields(reference_key: str, fields: dict[str, str]) -> None:
             "value": value
         })
     db.session.commit()
-
-
