@@ -6,6 +6,7 @@ from entities.reference import Reference
 import repositories.reference_repository as refrep
 
 
+ # pylint: disable=too-many-arguments, too-many-positional-arguments
 def add_article(title, author, year, journal, volume, number, pages):
     ref = Reference("article", str(uuid.uuid4()), {
         "author": author,
