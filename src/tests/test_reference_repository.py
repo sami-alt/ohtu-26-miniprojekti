@@ -1,5 +1,7 @@
 import unittest
 
+from sqlalchemy.exc import IntegrityError
+
 from config import db, app
 from db_helper import setup_db
 from entities.reference import Reference
@@ -62,6 +64,12 @@ class TestReferenceRepository(unittest.TestCase):
             res = refrep.get_references_by_type("article")
             cmp = filter(lambda x: x.type == "article", self.test_refs)
             self.assertSequenceEqual(res, list(cmp))
+
+    def test_duplicate_citation_key_rejected(self):
+        with app.app_context():
+            refrep.add_reference(self.test_refs[0])
+            with self.assertRaises(IntegrityError):
+                refrep.add_reference(self.test_refs[0])
 
     def test_delete(self):
         with app.app_context():
