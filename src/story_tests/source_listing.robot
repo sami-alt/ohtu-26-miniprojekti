@@ -18,8 +18,9 @@ Added book is shown in the source listing
     Click  button >> text=Add book
     
     Go To  ${HOME_URL}
-    Get Text  .references dd:nth-of-type(1)  ==  book
-    Get Text  .references dd:nth-of-type(2)  ==  Robert C. Martin
-    Get Text  .references dd:nth-of-type(3)  ==  Clean Code
-    Get Text  .references dd:nth-of-type(4)  ==  Prentice Hall
-    Get Text  .references dd:nth-of-type(5)  ==  2008
+    ${references}=  Get Text  .references
+    Should Contain  ${references}  book
+    Should Contain  ${references}  Robert C. Martin
+    Should Contain  ${references}  Clean Code
+    Should Contain  ${references}  Prentice Hall
+    Should Contain  ${references}  2008

@@ -7,7 +7,9 @@ Test Setup       Reset Database
 *** Test Cases ***
 Book form can be opened from the home page
     Go To  ${HOME_URL}
-    Click  text=Add a book
+    Click  text=Add source
+    Select Options By  id=source_type  label  Book
+    Click  text=Continue
     Get Title  ==  Add book
     Get Text  h2  ==  Add a book
 

@@ -20,3 +20,9 @@
 ### Mad
 - Pyörästä puhkesi kumi.
 - Miniprojektin ohjeet ovat hieman pirstaleisesti laitettu useaan paikkan.
+
+### Valitut taskeiksi
+
+- pyörän kumin paikkaus
+- pep8 lint setup
+- taskien sopiva jakaantuminen päällekkäisyyksien välttämiseksi

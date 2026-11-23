@@ -1,0 +1,11 @@
+[article]
+required = ["author", "title", "journal", "year"]
+optional = ["volume", "number", "pages", "month", "note"]
+
+[book]
+required = ["author", "title", "publisher", "year"]
+optional = ["volume", "number", "series", "address", "month", "year", "note"]
+
+[inproceedings]
+required = ["author", "title", "booktitle", "year"]
+optional = []
