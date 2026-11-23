@@ -33,7 +33,7 @@ def add_inproceedings_to_references():
         int(year)
         add_inproceedings_reference(author, title, booktitle, year, pages)
         return redirect("/")
-    except Exception as error:
+    except Exception as error: # pylint: disable=broad-exception-caught
         flash(str(error))
         return redirect("/new_inproceedings")
 
@@ -51,7 +51,7 @@ def add_book_to_references():
     try:
         add_book_reference(author, title, publisher, year)
         return redirect("/")
-    except Exception as error:
+    except Exception as error: # pylint: disable=broad-exception-caught
         flash(str(error))
         return redirect("/new_book")
 
@@ -72,7 +72,7 @@ def add_article_to_references():
     try:
         add_article(title, author, year, journal, volume, number, pages)
         return redirect("/")
-    except Exception as error:
+    except Exception as error: # pylint: disable=broad-exception-caught
         flash(str(error))
         return redirect("/new_article")
 
