@@ -2,7 +2,7 @@ from flask import abort, flash, jsonify, redirect, render_template, request
 
 from config import app, test_env
 from db_helper import reset_db
-from entities import reference
+from entities.reference import Reference
 from repositories.article_repository import add_article
 from repositories.book_repositories import add_book_reference
 from repositories.inproceedings_repository import add_inproceedings_reference
@@ -11,7 +11,6 @@ from repositories.reference_repository import (
     get_references,
     replace_reference,
 )
-
 
 SOURCE_TYPES = {
     "book": {
@@ -150,6 +149,7 @@ def _render_source_form(source_type=None):
         page_title=source["page_title"] if source else "Add source",
     )
 
+
 def _render_modify_source_form(source_type=None, citation_key=None, reference=None):
     source = SOURCE_TYPES.get(source_type)
     return render_template(
@@ -161,6 +161,7 @@ def _render_modify_source_form(source_type=None, citation_key=None, reference=No
         citation_key=citation_key,
         reference=reference,
     )
+
 
 @app.route("/")
 def index():
@@ -192,13 +193,13 @@ def add_inproceedings_to_references():
     try:
         if not author or not title or not booktitle or not year:
             raise ValueError(
-                "Author, title, conference proceedings title, and year "
+                "Author, title, conference proceedings title, and year " \
                 "are required."
             )
         int(year)
         add_inproceedings_reference(author, title, booktitle, year, pages)
         return redirect("/")
-    except Exception as error: # pylint: disable=broad-exception-caught
+    except Exception as error:  # pylint: disable=broad-exception-caught
         flash(str(error))
         return redirect("/new_inproceedings")
 
@@ -218,7 +219,7 @@ def add_book_to_references():
     try:
         add_book_reference(author, title, publisher, year)
         return redirect("/")
-    except Exception as error: # pylint: disable=broad-exception-caught
+    except Exception as error:  # pylint: disable=broad-exception-caught
         flash(str(error))
         return redirect("/new_book")
 
@@ -241,29 +242,33 @@ def add_article_to_references():
     try:
         add_article(title, author, year, journal, volume, number, pages)
         return redirect("/")
-    except Exception as error: # pylint: disable=broad-exception-caught
+    except Exception as error:  # pylint: disable=broad-exception-caught
         flash(str(error))
         return redirect("/new_article")
 
+
 @app.route("/modify_reference_by_citation_key/<citation_key>", methods=["POST"])
 def modify_reference(citation_key):
-        references = get_references()
-        reference_by_citation_key = next((ref for ref in references if ref.citation_key == citation_key), None)
-        if reference_by_citation_key is None:
-            flash(f"No reference found with citation key: {citation_key}")
-            return redirect("/")
+    references = get_references()
+    reference_by_citation_key = next(
+        (ref for ref in references if ref.citation_key == citation_key),
+        None,
+    )
+    if reference_by_citation_key is None:
+        flash(f"No reference found with citation key: {citation_key}")
+        return redirect("/")
 
-        return _render_modify_source_form(
-            source_type=reference_by_citation_key.type,
-            citation_key=citation_key,
-            reference=reference_by_citation_key,
-        )
+    return _render_modify_source_form(
+        source_type=reference_by_citation_key.type,
+        citation_key=citation_key,
+        reference=reference_by_citation_key,
+    )
 
 
 @app.route(
     "/modify_reference/<citation_key>",
     methods=["POST"],
-)   
+)
 def modify_reference_by_citation_key(citation_key):
     try:
         references = get_references()
@@ -290,13 +295,12 @@ def modify_reference_by_citation_key(citation_key):
 
         replace_reference(
             citation_key,
-            reference.Reference(existing.type, citation_key, fields),
+            Reference(existing.type, citation_key, fields),
         )
         return redirect("/")
-    except Exception as error:
+    except Exception as error:  # pylint: disable=broad-exception-caught
         flash(str(error))
         return redirect("/")
-
 
 
 @app.route(
@@ -307,7 +311,7 @@ def delete_reference_by_citation_key(citation_key):
     try:
         delete_reference(citation_key)
         return redirect("/")
-    except Exception as error:
+    except Exception as error:  # pylint: disable=broad-exception-caught
         flash(str(error))
         return redirect("/")
 

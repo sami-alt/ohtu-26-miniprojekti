@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 
 with app.app_context():
     @event.listens_for(db.engine, "connect")
-    def set_pragma(connection, connection_record):
+    def set_pragma(connection, _connection_record):
         cursor = connection.cursor()
         cursor.execute("PRAGMA foreign_keys = ON")
         cursor.close()
