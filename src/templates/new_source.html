@@ -19,20 +19,12 @@
   <button type="submit">Continue</button>
 </form>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-
 {% if source %}
   <form method="post" action="{{ source.action }}">
     {% for field in source.fields %}
-      <label for="{{ field.name }}">{{ field.label }}</label>
+      <label for="{{ field.name }}">
+        {{ field.label }}{% if not field.required %} <span class="muted">(optional)</span>{% endif %}
+      </label>
       <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}"{% if field.required %} required{% endif %}>
       <br>
     {% endfor %}

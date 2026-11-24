@@ -7,15 +7,6 @@
 {% block body %}
 
 <h2>Modify Source</h2>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
 
 {% if source %}
   <form method="post" action="/modify_reference/{{ citation_key }}">
