@@ -3,6 +3,24 @@ from sqlalchemy import text
 from config import db
 from entities.reference import Reference
 
+
+def get_reference(citation_key: str) -> Reference | None:
+    """Get a reference from the repository."""
+    with db.session.begin():
+        ref_query = text("SELECT reference_type FROM reference_entries WHERE citation_key = :key")
+
+        row = db.session.execute(ref_query, {"key": citation_key}).fetchone()
+
+        if not row:
+            return None
+        
+        return Reference(
+            type=row[0],
+            citation_key=citation_key,
+            fields=_get_fields(citation_key)
+        ) 
+
+
 def get_references() -> list[Reference]:
     """Get all references from ther repository."""
     with db.session.begin():

@@ -45,7 +45,14 @@ class TestReferenceRepository(unittest.TestCase):
         ),
     ]
 
-    def test_add_get(self):
+    def get_one(self):
+        with app.app_context():
+            for ref in self.test_refs:
+                refrep.add_reference(ref)
+            res = refrep.get_reference(self.test_refs[0].citation_key)
+            self.assertEqual(res, self.test_refs[0])
+
+    def get_all(self):
         with app.app_context():
             for ref in self.test_refs:
                 refrep.add_reference(ref)
