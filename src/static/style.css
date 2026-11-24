@@ -1,25 +1,136 @@
-.references {
-  list-style: none;
-  padding: 0;
-  max-width: 40rem;
+:root {
+  color-scheme: only light;
+  --canvas: #eceef2;
+  --paper: #ffffff;
+  --text: #1c1c1e;
+  --muted: #5c6370;
+  --line: #d4d8de;
+  --accent: #1b2f5e;
+  --error: #8b1a1a;
+  --page-width: 56rem;
 }
 
-.references li {
-  border: 1px solid black;
-  padding: 0.4rem 0.8rem;
-  margin-bottom: 0.8rem;
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--text);
+  font: 1.05rem/1.55 "Palatino Linotype", Palatino, "Book Antiqua", P052, Georgia, serif;
 }
 
-.references dl {
+a {
+  color: var(--accent);
+}
+
+dl {
   display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 0.2rem 0.8rem;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.1rem 1rem;
 }
 
-.references dt {
+dd {
+  margin: 0;
+}
+
+label {
+  display: block;
+  margin-top: 0.75rem;
   font-weight: bold;
 }
 
-.references dd {
-  margin: 0;
+input,
+select,
+textarea,
+button {
+  margin-bottom: 0.5rem;
+  padding: 0.3rem 0.6rem;
+  font: inherit;
+}
+
+button {
+  padding-inline: 1.2rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+
+.danger {
+  border-color: var(--error);
+  background: var(--error);
+}
+
+.muted {
+  color: var(--muted);
+  font-weight: normal;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.9rem max(1rem, calc((100% - var(--page-width)) / 2));
+  background: var(--accent);
+}
+
+header a {
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.transparent-button {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--paper);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.brand {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+main {
+  max-width: var(--page-width);
+  margin: 2rem auto;
+  padding: clamp(1rem, 5vw, 3rem);
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 12px rgb(0 0 0 / 0.06);
+}
+
+main > :first-child {
+  margin-top: 0;
+}
+
+main > :last-child {
+  margin-bottom: 0;
+}
+
+.flashes {
+  padding: 0.6rem 0.9rem;
+  border-left: 4px solid;
+  /* Partially transparent, so mix error and the paper bg color */
+  background: color-mix(in srgb, var(--error) 8%, var(--paper));
+  color: var(--error);
+  list-style: none;
+}
+
+.references li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.references dl {
+  margin-bottom: 0.75rem;
+}
+
+.references form {
+  display: inline;
 }

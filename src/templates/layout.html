@@ -13,6 +13,21 @@
     />
   </head>
   <body>
-    {% block body %}{% endblock %}
+    <header>
+      <a class="brand" href="{{ url_for('index') }}">Reference app</a>
+      <a class="transparent-button" href="{{ url_for('choose_source_type') }}">Add source</a>
+    </header>
+    <main>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="flashes" role="alert">
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+      {% block body %}{% endblock %}
+    </main>
   </body>
 </html>

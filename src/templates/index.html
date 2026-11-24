@@ -1,36 +1,33 @@
 {% extends "layout.html" %} {% block title %} Reference app {% endblock %} {% block
    body %}
    
-<h2>Reference app</h2>
-
-<div>
-  <a href="{{ url_for('choose_source_type') }}">Add source</a>
-</div>
+<h2>References</h2>
 
 {% if references %}
-  <ul class="references">
+  <ol class="references">
     {% for reference in references %}
     <li>
       <dl>
+        <dt>Key</dt>
+        <dd><code>{{ reference.citation_key }}</code></dd>
         <dt>Type</dt>
         <dd>{{ reference.type }}</dd>
         {% for name, value in reference.fields.items() if value %}
           <dt>{{ name | capitalize }}</dt>
           <dd>{{ value }}</dd>
         {% endfor %}
-          <dd><form action="/modify_reference_by_citation_key/{{ reference.citation_key }}" method="post">
-            <input type="submit" value="Modify">
-          </form></dd>
-          <dd><form action="/delete_reference_by_citation_key/{{ reference.citation_key }}" method="post">
-            <input type="submit" value="Delete">
-          </form></dd>
       </dl>
+      <form action="/modify_reference_by_citation_key/{{ reference.citation_key }}" method="post">
+        <button type="submit">Modify</button>
+      </form>
+      <form action="/delete_reference_by_citation_key/{{ reference.citation_key }}" method="post">
+        <button class="danger" type="submit">Delete</button>
+      </form>
     </li>
     {% endfor %}
-    
-  </ul>
+  </ol>
 {% else %}
-  <p>No sources available.</p>
+  <p class="muted">No sources available.</p>
 {% endif %}
 
 {% endblock %}

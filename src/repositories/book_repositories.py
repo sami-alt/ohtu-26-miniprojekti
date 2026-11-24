@@ -2,9 +2,6 @@
 
 import uuid
 
-from config import db
-from sqlalchemy import text
-
 from entities.reference import Reference
 
 import repositories.reference_repository as refrep
@@ -18,7 +15,6 @@ def get_book_references():
 
     return refs
 
-    
 
 def add_book_reference(author, title, publisher, year):
     ref = Reference("book", str(uuid.uuid4()), {

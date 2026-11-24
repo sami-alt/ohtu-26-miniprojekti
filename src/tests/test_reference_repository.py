@@ -1,5 +1,7 @@
 import unittest
 
+from sqlalchemy.exc import IntegrityError
+
 from config import db, app
 from db_helper import setup_db
 from entities.reference import Reference
