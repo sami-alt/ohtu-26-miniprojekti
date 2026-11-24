@@ -3,6 +3,41 @@ import os
 from sqlalchemy import text
 
 from config import db, app
+from entities.reference import Reference
+from repositories.reference_repository import add_reference
+
+SEED_REFERENCES = [
+    Reference("book", "martin2008", {
+        "author": "Robert C. Martin",
+        "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+        "publisher": "Prentice Hall",
+        "year": "2008",
+    }),
+    Reference("article", "dijkstra1968", {
+        "author": "Edsger W. Dijkstra",
+        "title": "Go To Statement Considered Harmful",
+        "journal": "Communications of the ACM",
+        "year": "1968",
+        "volume": "11",
+        "number": "3",
+        "pages": "147--148",
+    }),
+    Reference("inproceedings", "royce1970", {
+        "author": "Winston W. Royce",
+        "title": "Managing the Development of Large Software Systems",
+        "booktitle": "Proceedings of IEEE WESCON",
+        "year": "1970",
+        "pages": "1--9",
+    }),
+]
+
+
+def seed_db():
+    sql = text("SELECT citation_key FROM reference_entries")
+    existing = {row[0] for row in db.session.execute(sql).fetchall()}
+    for ref in SEED_REFERENCES:
+        if ref.citation_key not in existing:
+            add_reference(ref)
 
 
 def reset_db():
