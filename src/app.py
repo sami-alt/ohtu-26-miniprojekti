@@ -2,7 +2,6 @@ from flask import abort, flash, jsonify, redirect, render_template, request
 
 from config import app, test_env
 from db_helper import reset_db, seed_db
-from entities.reference import Reference
 from repositories.article_repository import add_article
 from repositories.book_repositories import add_book_reference
 from repositories.inproceedings_repository import add_inproceedings_reference

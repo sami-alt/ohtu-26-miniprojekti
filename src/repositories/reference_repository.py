@@ -18,7 +18,9 @@ def get_references() -> list[Reference]:
 def get_references_by_type(ref_type: str) -> list[Reference]:
     """Get all references of type ref_type from the repository."""
     with db.session.begin():
-        ref_query = text("SELECT citation_key FROM reference_entries WHERE reference_type = :ref_type")
+        ref_query = text("""
+        SELECT citation_key FROM reference_entries WHERE reference_type = :ref_type
+        """)
         res = db.session.execute(ref_query, {"ref_type": ref_type})
 
         return [Reference(
