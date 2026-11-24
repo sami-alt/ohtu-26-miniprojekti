@@ -35,6 +35,8 @@ SEED_REFERENCES = [
 def seed_db():
     sql = text("SELECT citation_key FROM reference_entries")
     existing = {row[0] for row in db.session.execute(sql).fetchall()}
+
+    db.session.commit()
     for ref in SEED_REFERENCES:
         if ref.citation_key not in existing:
             add_reference(ref)

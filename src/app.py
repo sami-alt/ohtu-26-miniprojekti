@@ -2,14 +2,13 @@ from flask import abort, flash, jsonify, redirect, render_template, request
 
 from config import app, test_env
 from db_helper import reset_db, seed_db
-from entities.reference import Reference
 from repositories.article_repository import add_article
 from repositories.book_repositories import add_book_reference
 from repositories.inproceedings_repository import add_inproceedings_reference
 from repositories.reference_repository import (
     delete_reference,
     get_references,
-    replace_reference,
+    update_reference,
 )
 
 SOURCE_TYPES = {
@@ -293,10 +292,7 @@ def modify_reference_by_citation_key(citation_key):
         if "year" in fields:
             int(fields["year"])
 
-        replace_reference(
-            citation_key,
-            Reference(existing.type, citation_key, fields),
-        )
+        update_reference(citation_key, fields)
         return redirect("/")
     except Exception as error:  # pylint: disable=broad-exception-caught
         flash(str(error))

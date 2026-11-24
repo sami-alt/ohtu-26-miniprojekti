@@ -12,7 +12,7 @@
   <form method="post" action="/modify_reference/{{ citation_key }}">
     {% for field in source.fields %}
       <label for="{{ field.name }}">{{ field.label }}</label>
-      <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}" value="{{ reference.fields.get(field.name, '') }}"{% if field.required %} required{% endif %}>
+      <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}" value="{{ reference.fields.get(field.name) or '' }}"{% if field.required %} required{% endif %}>
       <br>
     {% endfor %}
     <button type="submit" value="modify">Modify</button>
