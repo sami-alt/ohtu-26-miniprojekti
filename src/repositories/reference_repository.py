@@ -13,12 +13,12 @@ def get_reference(citation_key: str) -> Reference | None:
 
         if not row:
             return None
-        
+
         return Reference(
             type=row[0],
             citation_key=citation_key,
             fields=_get_fields(citation_key)
-        ) 
+        )
 
 
 def get_references() -> list[Reference]:
