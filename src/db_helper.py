@@ -85,9 +85,7 @@ def setup_db():
             db.session.execute(sql)
     db.session.commit()
 
-    #sql = text(schema_sql)
-    #db.session.execute(sql)
-    #db.session.commit()
+    print("Database setup completed")
 
 if __name__ == "__main__":
     with app.app_context():

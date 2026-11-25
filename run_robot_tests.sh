@@ -2,9 +2,12 @@
 
 echo "Running tests"
 
-# luodaan tietokanta
-uv run python src/db_helper.py
-
+# Run DB setup script, if not ok, bail out with error message
+if ! uv run python src/db_helper.py; then
+  # 
+  echo "DB setup failed" >&2
+  exit 1
+fi
 echo "DB setup done"
 
 # käynnistetään Flask-palvelin taustalle
@@ -12,9 +15,16 @@ uv run python3 src/index.py &
 
 echo "started Flask server"
 
-# odetetaan, että palvelin on valmiina ottamaan vastaan pyyntöjä
-while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:5001)" != "200" ]];
-  do sleep 1;
+
+# Wait for Flask server to be ready
+waited=0
+until [[ "$(curl -s -o /dev/null --max-time 2 -w '%{http_code}' localhost:5001)" == "200" ]]; do
+  if (( waited >= 20 )); then
+    echo "Flask server was not ready within 20 seconds" >&2
+    exit 1
+  fi
+  sleep 1
+  waited=$((waited + 1))
 done
 
 echo "Flask server is ready"
