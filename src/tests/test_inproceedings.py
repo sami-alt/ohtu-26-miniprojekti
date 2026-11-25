@@ -2,8 +2,7 @@ import unittest
 
 from app import app
 from db_helper import setup_db
-from repositories.book_repositories import add_book_reference
-from repositories.inproceedings_repository import get_inproceedings_references
+from repositories.reference_repository import create_reference, get_references_by_type
 
 @unittest.skip("Old unported test. Possibly redundant with robot tests?")
 class TestInproceedingsForm(unittest.TestCase):
@@ -14,10 +13,12 @@ class TestInproceedingsForm(unittest.TestCase):
 
     def test_successful_submission_is_shown_in_source_listing(self):
         with app.app_context():
-            add_book_reference(
-                "Tove Jansson", "Moominvalley in November",
-                "Farrar, Straus and Giroux", "2003"
-            )
+            create_reference("book", "jansson03", {
+                "author": "Tove Jansson",
+                "title": "Moominvalley in November",
+                "publisher": "Farrar, Straus and Giroux",
+                "year": "2003"
+            })
 
         response = self.client.post("/create_inproceedings", data={
             "author": "Jove Tansson",
@@ -52,7 +53,7 @@ class TestInproceedingsForm(unittest.TestCase):
 
         self.assertEqual(response.status_code, 302)
         with app.app_context():
-            self.assertEqual(get_inproceedings_references()[0].fields["pages"], "")
+            self.assertEqual(get_references_by_type("inproceedings")[0].fields["pages"], "")
 
     def test_non_integer_year_is_rejected_without_saving(self):
         response = self.client.post("/create_inproceedings", data={
@@ -65,4 +66,4 @@ class TestInproceedingsForm(unittest.TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.headers["Location"], "/new_inproceedings")
         with app.app_context():
-            self.assertEqual(get_inproceedings_references(), [])
+            self.assertEqual(get_references_by_type("inproceedings"), [])

@@ -23,7 +23,7 @@ Each source type opens its matching form
     Get Title  ==  Add book
     Get Text  h2  ==  Add a book
     ${action}=  Get Attribute  form[method="post"]  action
-    Should Be Equal  ${action}  /create_book
+    Should Be Equal  ${action}  /create_source/book
 
     Go To  ${HOME_URL}/new_source
     Select Options By  id=source_type  label  Journal article
@@ -31,7 +31,7 @@ Each source type opens its matching form
     Get Title  ==  Add a journal article
     Get Text  h2  ==  Add a journal article
     ${action}=  Get Attribute  form[method="post"]  action
-    Should Be Equal  ${action}  /create_article
+    Should Be Equal  ${action}  /create_source/article
 
     Go To  ${HOME_URL}/new_source
     Select Options By  id=source_type  label  Conference paper
@@ -39,7 +39,7 @@ Each source type opens its matching form
     Get Title  ==  Add a conference paper
     Get Text  h2  ==  Add a conference paper
     ${action}=  Get Attribute  form[method="post"]  action
-    Should Be Equal  ${action}  /create_inproceedings
+    Should Be Equal  ${action}  /create_source/inproceedings
 
 Each source form can return to source type selection
     [Tags]  story18
