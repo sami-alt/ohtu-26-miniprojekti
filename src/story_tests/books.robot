@@ -11,7 +11,7 @@ Book form can be opened from the home page
     Select Options By  id=source_type  label  Book
     Click  text=Continue
     Get Title  ==  Add book
-    Get Text  h2  ==  Add a book
+    Get Text  h2  ==  Add book
 
 Return home after adding a book
     Go To  ${HOME_URL}/new_book

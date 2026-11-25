@@ -21,23 +21,23 @@ Each source type opens its matching form
     Select Options By  id=source_type  label  Book
     Click  text=Continue
     Get Title  ==  Add book
-    Get Text  h2  ==  Add a book
+    Get Text  h2  ==  Add book
     ${action}=  Get Attribute  form[method="post"]  action
     Should Be Equal  ${action}  /create_source/book
 
     Go To  ${HOME_URL}/new_source
-    Select Options By  id=source_type  label  Journal article
+    Select Options By  id=source_type  label  Article
     Click  text=Continue
-    Get Title  ==  Add a journal article
-    Get Text  h2  ==  Add a journal article
+    Get Title  ==  Add article
+    Get Text  h2  ==  Add article
     ${action}=  Get Attribute  form[method="post"]  action
     Should Be Equal  ${action}  /create_source/article
 
     Go To  ${HOME_URL}/new_source
     Select Options By  id=source_type  label  Conference paper
     Click  text=Continue
-    Get Title  ==  Add a conference paper
-    Get Text  h2  ==  Add a conference paper
+    Get Title  ==  Add conference paper
+    Get Text  h2  ==  Add conference paper
     ${action}=  Get Attribute  form[method="post"]  action
     Should Be Equal  ${action}  /create_source/inproceedings
 
@@ -64,7 +64,7 @@ Selecting source types does not add a source
     Click  text=Add source
     Select Options By  id=source_type  label  Book
     Click  text=Continue
-    Select Options By  id=source_type  label  Journal article
+    Select Options By  id=source_type  label  Article
     Click  text=Continue
     Select Options By  id=source_type  label  Conference paper
     Click  text=Continue

@@ -12,7 +12,8 @@ from repositories.reference_repository import (
     update_reference,
 )
 from repositories.reference_type_repository import (
-    get_reference_type
+    get_reference_type,
+    get_reference_types
 )
 
 SOURCE_TYPES = {
@@ -142,14 +143,12 @@ SOURCE_TYPES = {
 }
 
 
-def _render_source_form(source_type=None):
-    source = SOURCE_TYPES.get(source_type)
+def _render_source_form(source_type_name=""):
+    source_type = get_reference_type(source_type_name)
     return render_template(
         "new_source.html",
-        source=source,
         source_type=source_type,
-        source_types=SOURCE_TYPES,
-        page_title=source["page_title"] if source else "Add source",
+        source_types=get_reference_types()
     )
 
 
