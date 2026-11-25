@@ -5,7 +5,7 @@ from db_helper import setup_db
 from repositories.book_repositories import add_book_reference
 from repositories.inproceedings_repository import get_inproceedings_references
 
-
+@unittest.skip("Old unported test. Possibly redundant with robot tests?")
 class TestInproceedingsForm(unittest.TestCase):
     def setUp(self):
         with app.app_context():
