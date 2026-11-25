@@ -8,6 +8,7 @@ from repositories.inproceedings_repository import add_inproceedings_reference
 from repositories.reference_repository import (
     delete_reference,
     get_references,
+    get_references_matching,
     update_reference,
 )
 
@@ -166,6 +167,31 @@ def _render_modify_source_form(source_type=None, citation_key=None, reference=No
 def index():
     references = get_references()
     return render_template("index.html", references=references)
+
+
+@app.route("/api/references", methods=["GET"])
+def search_references():
+    filters = [
+        (field, value)
+        for field, values in request.args.lists()
+        if field not in ("field", "value")
+        for value in values
+    ]
+    filters.extend(zip(
+        request.args.getlist("field"),
+        request.args.getlist("value"),
+    ))
+    references = get_references_matching(filters)
+    return jsonify({
+        "references": [
+            {
+                "type": reference.type,
+                "citation_key": reference.citation_key,
+                "fields": reference.fields,
+            }
+            for reference in references
+        ],
+    })
 
 
 @app.route("/new_source", methods=["GET"])
