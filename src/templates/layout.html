@@ -18,11 +18,15 @@
       <a class="transparent-button" href="{{ url_for('choose_source_type') }}">Add source</a>
     </header>
     <main>
-      {% with messages = get_flashed_messages() %}
+      {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
-          <ul class="flashes" role="alert">
-          {% for message in messages %}
-            <li>{{ message }}</li>
+          <ul class="flashes">
+          {% for category, message in messages %}
+            {% if category == 'success' %}
+              <li class="flash-success">{{ message }}</li>
+            {% else %}
+              <li class="{{ category }}">{{ message }}</li>
+            {% endif %}
           {% endfor %}
           </ul>
         {% endif %}

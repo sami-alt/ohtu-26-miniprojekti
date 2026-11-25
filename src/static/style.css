@@ -7,6 +7,7 @@
   --line: #d4d8de;
   --accent: #1b2f5e;
   --error: #8b1a1a;
+  --success: #176b36;
   --page-width: 56rem;
 }
 
@@ -114,12 +115,21 @@ main > :last-child {
 }
 
 .flashes {
+  padding: 0;
+  list-style: none;
+}
+
+.flashes li {
   padding: 0.6rem 0.9rem;
-  border-left: 4px solid;
-  /* Partially transparent, so mix error and the paper bg color */
+  border-left: 4px solid var(--error);
   background: color-mix(in srgb, var(--error) 8%, var(--paper));
   color: var(--error);
-  list-style: none;
+}
+
+.flashes li.flash-success {
+  border-color: var(--success);
+  background: color-mix(in srgb, var(--success) 8%, var(--paper));
+  color: var(--success);
 }
 
 .references li {
