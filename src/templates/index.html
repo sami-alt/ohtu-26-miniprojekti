@@ -17,6 +17,18 @@
           <dd>{{ value }}</dd>
         {% endfor %}
       </dl>
+      <button type="button" command="show-modal" commandfor="add_tag_{{ loop.index }}">Add Tag</button>
+      <dialog id="add_tag_{{ loop.index }}">
+        <form action="/add_tag_to_reference/{{ reference.citation_key }}" method="post">
+          <label for="tag_{{ loop.index }}">Tag:</label>
+          <input type="text" id="tag_{{ loop.index }}" name="tag">
+          <button type="submit" formmethod="dialog">Cancel</button>
+          <button id="confirm" type="submit" value="default">Add</button>
+          <menu>
+          </menu>
+        </form>
+
+      </dialog>
       <form action="/modify_reference_by_citation_key/{{ reference.citation_key }}" method="post">
         <button type="submit">Modify</button>
       </form>
