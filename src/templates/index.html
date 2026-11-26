@@ -3,6 +3,28 @@
    
 <h2>References</h2>
 
+<form action="/" method="get">
+  {% for filter in filters %}
+    <div class="filter">
+      <label>
+        Field
+        <select name="field">
+          {% for field in search_fields %}
+            <option value="{{ field }}" {% if filter.field == field %}selected{% endif %}>{{ field }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>
+        Value
+        <input type="text" name="value" value="{{ filter.value }}">
+      </label>
+    </div>
+  {% endfor %}
+  <button type="submit" name="action" value="search">Search</button>
+  <button type="submit" name="action" value="add">Add filter</button>
+  <button type="submit" name="action" value="clear">Clear filters</button>
+</form>
+
 {% if references %}
   <ol class="references">
     {% for reference in references %}
@@ -26,6 +48,8 @@
     </li>
     {% endfor %}
   </ol>
+{% elif no_matching_sources %}
+  <p class="muted">No matching sources found.</p>
 {% else %}
   <p class="muted">No sources available.</p>
 {% endif %}

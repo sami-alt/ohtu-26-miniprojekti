@@ -138,6 +138,19 @@ SOURCE_TYPES = {
     },
 }
 
+SEARCH_FIELDS = [
+    "author",
+    "title",
+    "publisher",
+    "year",
+    "journal",
+    "volume",
+    "number",
+    "pages",
+    "booktitle",
+    "type",
+]
+
 
 def _render_source_form(source_type=None):
     source = SOURCE_TYPES.get(source_type)
@@ -165,8 +178,35 @@ def _render_modify_source_form(source_type=None, citation_key=None, reference=No
 
 @app.route("/")
 def index():
-    references = get_references()
-    return render_template("index.html", references=references)
+    if request.args.get("action") == "clear":
+        return redirect("/")
+
+    filters = [
+        {"field": field, "value": value}
+        for field, value in zip(
+            request.args.getlist("field"),
+            request.args.getlist("value"),
+        )
+    ]
+    if request.args.get("action") == "add":
+        filters.append({"field": "author", "value": ""})
+    if not filters:
+        filters.append({"field": "author", "value": ""})
+
+    active_filters = [
+        (item["field"], item["value"])
+        for item in filters
+        if item["field"].strip() and item["value"].strip()
+    ]
+    references = get_references_matching(active_filters)
+    has_sources = bool(references) or bool(get_references())
+    return render_template(
+        "index.html",
+        references=references,
+        filters=filters,
+        search_fields=SEARCH_FIELDS,
+        no_matching_sources=bool(active_filters) and has_sources and not references,
+    )
 
 
 @app.route("/api/references", methods=["GET"])
