@@ -12,12 +12,12 @@ class TestReferenceRepository(unittest.TestCase):
 
     def test_types_exist(self):
         with app.app_context():
-            types = reftyrep.get_types()
+            types = reftyrep.get_reference_types()
             self.assertTrue(len(types))
 
     def test_get_type(self):
         with app.app_context():
-            typ = reftyrep.get_type("article")
+            typ = reftyrep.get_reference_type("article")
             self.assertIsNotNone(typ)
 
             assert typ is not None # For type hints

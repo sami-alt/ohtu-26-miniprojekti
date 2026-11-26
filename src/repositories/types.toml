@@ -4,8 +4,9 @@ optional = ["volume", "number", "pages", "month", "note"]
 
 [book]
 required = ["author", "title", "publisher", "year"]
-optional = ["volume", "number", "series", "address", "month", "year", "note"]
+optional = ["volume", "number", "series", "address", "month", "note"]
 
 [inproceedings]
 required = ["author", "title", "booktitle", "year"]
 optional = []
+display_name = "conference paper"
