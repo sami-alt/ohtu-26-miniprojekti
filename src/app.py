@@ -1,15 +1,20 @@
+import uuid
+
 from flask import abort, flash, jsonify, redirect, render_template, request
+from sqlalchemy.exc import DBAPIError
 
 from config import app, test_env
 from db_helper import reset_db, seed_db
-from repositories.article_repository import add_article
-from repositories.book_repositories import add_book_reference
-from repositories.inproceedings_repository import add_inproceedings_reference
 from repositories.reference_repository import (
+    create_reference,
     delete_reference,
     get_references,
     get_references_matching,
     update_reference,
+)
+from repositories.reference_type_repository import (
+    get_reference_type,
+    get_reference_types
 )
 
 SOURCE_TYPES = {
@@ -17,7 +22,7 @@ SOURCE_TYPES = {
         "label": "Book",
         "title": "Add a book",
         "page_title": "Add book",
-        "action": "/create_book",
+        "action": "/create_source/book",
         "submit_label": "Add book",
         "fields": [
             {
@@ -50,7 +55,7 @@ SOURCE_TYPES = {
         "label": "Journal article",
         "title": "Add a journal article",
         "page_title": "Add a journal article",
-        "action": "/create_article",
+        "action": "/create_source/article",
         "submit_label": "Add article",
         "fields": [
             {
@@ -101,7 +106,7 @@ SOURCE_TYPES = {
         "label": "Conference paper",
         "title": "Add a conference paper",
         "page_title": "Add a conference paper",
-        "action": "/create_inproceedings",
+        "action": "/create_source/inproceedings",
         "submit_label": "Add a conference paper",
         "fields": [
             {
@@ -152,14 +157,12 @@ SEARCH_FIELDS = [
 ]
 
 
-def _render_source_form(source_type=None):
-    source = SOURCE_TYPES.get(source_type)
+def _render_source_form(source_type_name=""):
+    source_type = get_reference_type(source_type_name)
     return render_template(
         "new_source.html",
-        source=source,
         source_type=source_type,
-        source_types=SOURCE_TYPES,
-        page_title=source["page_title"] if source else "Add source",
+        source_types=get_reference_types()
     )
 
 
@@ -242,74 +245,31 @@ def choose_source_type():
     return _render_source_form(source_type)
 
 
-@app.route("/new_inproceedings")
-def new_inproceedings():
-    return _render_source_form("inproceedings")
+@app.route("/create_source/<source_type>", methods=["POST"])
+def create_source(source_type: str):
+    ref_type = get_reference_type(source_type)
+    if not ref_type:
+        abort(404)
 
-
-@app.route("/create_inproceedings", methods=["POST"])
-def add_inproceedings_to_references():
-    author = request.form.get("author", "").strip()
-    title = request.form.get("title", "").strip()
-    booktitle = request.form.get("booktitle", "").strip()
-    year = request.form.get("year", "").strip()
-    pages = request.form.get("pages", "").strip()
-
-    try:
-        if not author or not title or not booktitle or not year:
-            raise ValueError(
-                "Author, title, conference proceedings title, and year " \
-                "are required."
-            )
-        int(year)
-        add_inproceedings_reference(author, title, booktitle, year, pages)
-        return redirect("/")
-    except Exception as error:  # pylint: disable=broad-exception-caught
-        flash(str(error))
-        return redirect("/new_inproceedings")
-
-
-@app.route("/new_book")
-def new_book():
-    return _render_source_form("book")
-
-
-@app.route("/create_book", methods=["POST"])
-def add_book_to_references():
-    author = request.form.get("author")
-    title = request.form.get("title")
-    publisher = request.form.get("publisher")
-    year = request.form.get("year")
+    field_names = ref_type.required_fields + ref_type.optional_fields
+    fields =  {}
+    for field_name in field_names:
+        value = request.form.get(field_name)
+        if value:
+            fields[field_name] = value
 
     try:
-        add_book_reference(author, title, publisher, year)
-        return redirect("/")
-    except Exception as error:  # pylint: disable=broad-exception-caught
-        flash(str(error))
-        return redirect("/new_book")
+        create_reference(source_type, str(uuid.uuid4()), fields)
+    except DBAPIError as err:
+        flash(str(err))
+        return redirect("/create_source")
+
+    return redirect("/")
 
 
-@app.route("/new_article")
-def new_article():
-    return _render_source_form("article")
-
-
-@app.route("/create_article", methods=["POST"])
-def add_article_to_references():
-    author = request.form.get("author")
-    title = request.form.get("title")
-    journal = request.form.get("journal")
-    year = request.form.get("year")
-    volume = request.form.get("volume") or None
-    number = request.form.get("number") or None
-    pages = request.form.get("pages") or None
-
-    try:
-        add_article(title, author, year, journal, volume, number, pages)
-        return redirect("/")
-    except Exception as error:  # pylint: disable=broad-exception-caught
-        flash(str(error))
-        return redirect("/new_article")
+@app.route("/new_<source_type>")
+def new_anything(source_type: str):
+    return redirect(f"/new_source?type={source_type}")
 
 
 @app.route("/modify_reference_by_citation_key/<citation_key>", methods=["POST"])
