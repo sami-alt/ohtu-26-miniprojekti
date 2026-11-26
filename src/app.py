@@ -1,6 +1,6 @@
 import re
 
-from flask import abort, flash, jsonify, redirect, render_template, request
+from flask import Response, abort, flash, jsonify, redirect, render_template, request
 from sqlalchemy.exc import DBAPIError
 
 from config import app, test_env
@@ -284,6 +284,33 @@ def delete_reference_by_citation_key(citation_key):
 def seed_database():
     seed_db()
     return redirect("/")
+
+
+def _get_bibtex_export_content():
+    references = get_references()
+    bibtex_entries = [ref.to_bibtex() for ref in references]
+    return "\n\n".join(bibtex_entries) + "\n"
+
+@app.route("/export")
+def export_bibtex():
+    content = _get_bibtex_export_content()
+    if not content.strip():
+        flash("No sources to export.")
+        return redirect("/")
+    return render_template("export.html", bibtex=content)
+
+
+@app.route("/export/download")
+def download_bibtex():
+    content = _get_bibtex_export_content()
+    if not content.strip():
+        flash("No sources to export.")
+        return redirect("/")
+    return Response(
+        content,
+        mimetype="application/x-bibtex",
+        headers={"Content-Disposition": "attachment; filename=references.bib"}
+    )
 
 
 # testausta varten oleva reitti

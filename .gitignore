@@ -17,3 +17,4 @@ playwright-log.txt
 .pytest_cache/
 opencode.json
 /.vscode/settings.json
+references.bib

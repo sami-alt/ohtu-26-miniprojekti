@@ -40,18 +40,21 @@ label {
 input,
 select,
 textarea,
-button {
+button,
+.button {
   margin-bottom: 0.5rem;
   padding: 0.3rem 0.6rem;
   font: inherit;
 }
 
-button {
+button, .button {
+  display: inline-block;
   padding-inline: 1.2rem;
   border: 1px solid var(--accent);
   background: var(--accent);
   color: var(--paper);
   cursor: pointer;
+  text-decoration: none;
 
   &:hover {
     opacity: 0.8;
@@ -133,4 +136,18 @@ main > :last-child {
 
 .references form {
   display: inline;
+}
+
+.bibtex {
+  box-sizing: border-box;
+  width: 100%;
+  font-family: monospace;
+  font-size: 0.9rem;
+  field-sizing: content;
+}
+
+@media (min-width: 48rem) {
+  .bibtex {
+    max-height: 70vh;
+  }
 }

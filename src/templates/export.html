@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Export BibTeX
+{% endblock %}
+
+{% block body %}
+
+<h2>Export BibTeX</h2>
+
+<button type="button" id="copy">Copy to clipboard</button>
+<a class="button" href="{{ url_for('download_bibtex') }}">Download .bib file</a>
+<span id="copy-status" class="muted" role="status"></span>
+
+<label for="bibtex">BibTeX</label>
+<textarea id="bibtex" class="bibtex" rows="30" readonly>{{ bibtex }}</textarea>
+
+<script>
+  const bibtex = document.getElementById("bibtex");
+  const copyStatus = document.getElementById("copy-status");
+
+  // Clicking the text selects all of it, so Ctrl+C copies everything
+  bibtex.addEventListener("focus", () => bibtex.select());
+
+  document.getElementById("copy").addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(bibtex.value);
+      copyStatus.textContent = "Copied!";
+    } catch {
+      bibtex.select();
+      copyStatus.textContent = "Copy failed, press Ctrl+C instead.";
+    }
+  });
+</script>
+
+{% endblock %}
