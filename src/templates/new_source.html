@@ -22,8 +22,12 @@ Add {% if source_type %}{{ source_type.get_display_name() }}{% else %}source{% e
 </form>
 
 {% if source_type %}
-  <!-- Required fields -->
   <form method="post" action="/create_source/{{ source_type.name }}">
+    <label for="citation_key">Citation key</label>
+    <!-- Pattern is a regex for accepted input formats -->
+    <input type="text" id="citation_key" name="citation_key" pattern="{{ CITATION_KEY_REGEX }}" required/>
+
+    <!-- Required fields -->
     {% for field_name in source_type.required_fields %}
       <label for="{{ field_name }}">
         {{ field_name.capitalize() }}

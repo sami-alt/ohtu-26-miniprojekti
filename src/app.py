@@ -1,4 +1,4 @@
-import uuid
+import re
 
 from flask import abort, flash, jsonify, redirect, render_template, request
 from sqlalchemy.exc import DBAPIError
@@ -15,6 +15,8 @@ from repositories.reference_type_repository import (
     get_reference_type,
     get_reference_types
 )
+
+CITATION_KEY_REGEX = r"[\w\-]+"
 
 SOURCE_TYPES = {
     "book": {
@@ -148,7 +150,8 @@ def _render_source_form(source_type_name=""):
     return render_template(
         "new_source.html",
         source_type=source_type,
-        source_types=get_reference_types()
+        source_types=get_reference_types(),
+        CITATION_KEY_REGEX=CITATION_KEY_REGEX
     )
 
 
@@ -185,18 +188,23 @@ def create_source(source_type: str):
     if not ref_type:
         abort(404)
 
+    citation_key = request.form.get("citation_key")
+    if not citation_key \
+    or not re.fullmatch(CITATION_KEY_REGEX, citation_key):
+        abort(400)
+
     field_names = ref_type.required_fields + ref_type.optional_fields
-    fields =  {}
+    fields = {}
     for field_name in field_names:
         value = request.form.get(field_name)
         if value:
             fields[field_name] = value
 
     try:
-        create_reference(source_type, str(uuid.uuid4()), fields)
-    except DBAPIError as err:
-        flash(str(err))
-        return redirect("/create_source")
+        create_reference(source_type, citation_key, fields)
+    except DBAPIError:
+        flash("An entry with this citation key already exists!")
+        return redirect("/new_source")
 
     return redirect("/")
 
