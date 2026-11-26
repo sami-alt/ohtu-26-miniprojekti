@@ -9,6 +9,7 @@ from repositories.reference_repository import (
     create_reference,
     delete_reference,
     get_references,
+    get_references_matching,
     update_reference,
 )
 from repositories.reference_type_repository import (
@@ -142,6 +143,19 @@ SOURCE_TYPES = {
     },
 }
 
+SEARCH_FIELDS = [
+    "author",
+    "title",
+    "publisher",
+    "year",
+    "journal",
+    "volume",
+    "number",
+    "pages",
+    "booktitle",
+    "type",
+]
+
 
 def _render_source_form(source_type_name=""):
     source_type = get_reference_type(source_type_name)
@@ -167,8 +181,60 @@ def _render_modify_source_form(source_type=None, citation_key=None, reference=No
 
 @app.route("/")
 def index():
-    references = get_references()
-    return render_template("index.html", references=references)
+    if request.args.get("action") == "clear":
+        return redirect("/")
+
+    filters = [
+        {"field": field, "value": value}
+        for field, value in zip(
+            request.args.getlist("field"),
+            request.args.getlist("value"),
+        )
+    ]
+    if request.args.get("action") == "add":
+        filters.append({"field": "author", "value": ""})
+    if not filters:
+        filters.append({"field": "author", "value": ""})
+
+    active_filters = [
+        (item["field"], item["value"])
+        for item in filters
+        if item["field"].strip() and item["value"].strip()
+    ]
+    references = get_references_matching(active_filters)
+    has_sources = bool(references) or bool(get_references())
+    return render_template(
+        "index.html",
+        references=references,
+        filters=filters,
+        search_fields=SEARCH_FIELDS,
+        no_matching_sources=bool(active_filters) and has_sources and not references,
+    )
+
+
+@app.route("/api/references", methods=["GET"])
+def search_references():
+    filters = [
+        (field, value)
+        for field, values in request.args.lists()
+        if field not in ("field", "value")
+        for value in values
+    ]
+    filters.extend(zip(
+        request.args.getlist("field"),
+        request.args.getlist("value"),
+    ))
+    references = get_references_matching(filters)
+    return jsonify({
+        "references": [
+            {
+                "type": reference.type,
+                "citation_key": reference.citation_key,
+                "fields": reference.fields,
+            }
+            for reference in references
+        ],
+    })
 
 
 @app.route("/new_source", methods=["GET"])

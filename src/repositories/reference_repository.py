@@ -33,6 +33,30 @@ def get_references() -> list[Reference]:
         ) for row in db.session.execute(ref_query).fetchall()]
 
 
+def get_references_matching(filters: list[tuple[str, str]]) -> list[Reference]:
+    """Get references matching every non-empty field/value filter."""
+    active_filters = [
+        (field.strip(), value.strip().casefold())
+        for field, value in filters
+        if field.strip() and value.strip()
+    ]
+
+    def matches(reference: Reference) -> bool:
+        source_values = {
+            **reference.fields,
+            "type": reference.type,
+            "citation_key": reference.citation_key,
+        }
+        return all(
+            field in source_values
+            and source_values[field] is not None
+            and value in str(source_values[field]).casefold()
+            for field, value in active_filters
+        )
+
+    return [reference for reference in get_references() if matches(reference)]
+
+
 def get_references_by_type(ref_type: str) -> list[Reference]:
     """Get all references of type ref_type from the repository."""
     with db.session.begin():
