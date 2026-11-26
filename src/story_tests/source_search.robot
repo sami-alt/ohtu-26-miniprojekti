@@ -202,7 +202,7 @@ Add filtering source fixtures
     Fill Text  [name="booktitle"]  FilterMeetingGamma
     Fill Text  [name="year"]       2033
     Fill Text  [name="pages"]      FilterConferencePages201-209
-    Click  button >> text=Add a conference paper
+    Click  css=form[action="/create_inproceedings"] button[type="submit"]
 
 Add combined filter fixtures
     Go To  ${HOME_URL}/new_book
@@ -224,4 +224,4 @@ Add combined filter fixtures
     Fill Text  [name="title"]      FilterAndWrongAuthor
     Fill Text  [name="booktitle"]  FilterAndConference
     Fill Text  [name="year"]       2041
-    Click  button >> text=Add a conference paper
+    Click  css=form[action="/create_inproceedings"] button[type="submit"]
