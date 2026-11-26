@@ -1,34 +1,46 @@
 {% extends "layout.html" %}
 
 {% block title %}
-{{ page_title }}
+Add {% if source_type %}{{ source_type.get_display_name() }}{% else %}source{% endif %}
 {% endblock %}
 
 {% block body %}
 
-<h2>{% if source %}{{ source.title }}{% else %}Select source type{% endif %}</h2>
+<h2>{% if source_type %}Add {{ source_type.get_display_name() }}{% else %}Select source type{% endif %}</h2>
 
 <form method="get" action="{{ url_for('choose_source_type') }}">
   <label for="source_type">Source type</label>
   <select id="source_type" name="type" required>
-    <option value="" disabled{% if not source_type %} selected{% endif %}>Choose a source type</option>
-    {% for type_name, type_info in source_types.items() %}
-      <option value="{{ type_name }}"{% if source_type == type_name %} selected{% endif %}>{{ type_info.label }}</option>
+    <option value="" disabled{% if not source_type.name %} selected{% endif %}>Choose a source type</option>
+    {% for type_info in source_types %}
+      <option value="{{ type_info.name }}"{% if source_type.name == type_info.name %} selected{% endif %}>
+        {{ type_info.get_display_name().capitalize() }} 
+      </option>
     {% endfor %}
   </select>
   <button type="submit">Continue</button>
 </form>
 
-{% if source %}
-  <form method="post" action="{{ source.action }}">
-    {% for field in source.fields %}
-      <label for="{{ field.name }}">
-        {{ field.label }}{% if not field.required %} <span class="muted">(optional)</span>{% endif %}
+{% if source_type %}
+  <!-- Required fields -->
+  <form method="post" action="/create_source/{{ source_type.name }}">
+    {% for field_name in source_type.required_fields %}
+      <label for="{{ field_name }}">
+        {{ field_name.capitalize() }}
       </label>
-      <input type="{{ field.type }}" id="{{ field.name }}" name="{{ field.name }}"{% if field.required %} required{% endif %}>
+      <input type="text" id="{{ field_name }}" name="{{ field_name }}" required>
       <br>
     {% endfor %}
-    <button type="submit">{{ source.submit_label }}</button>
+
+    <!-- Optional fields -->
+    {% for field_name in source_type.optional_fields %}
+      <label for="{{ field_name }}">
+        {{ field_name.capitalize() }} <span class="muted">(optional)</span>
+      </label>
+      <input type="text" id="{{ field_name }}" name="{{ field_name }}">
+      <br>
+    {% endfor %}
+    <button type="submit">Add {{ source_type.get_display_name() }}</button>
   </form>
 
   <a href="{{ url_for('choose_source_type') }}">Back to source types</a>
