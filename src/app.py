@@ -264,6 +264,7 @@ def create_source(source_type: str):
         flash(str(err))
         return redirect("/create_source")
 
+    flash(f"{ref_type.get_display_name().capitalize()} added successfully.", "success")
     return redirect("/")
 
 
