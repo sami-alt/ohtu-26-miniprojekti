@@ -2,6 +2,8 @@
 
 echo "Running tests"
 
+export TEST_ENV=true
+
 # Run DB setup script, if not ok, bail out with error message
 if ! uv run python src/db_helper.py; then
   # 
